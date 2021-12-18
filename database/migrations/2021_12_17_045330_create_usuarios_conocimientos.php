@@ -19,8 +19,6 @@ class CreateUsuariosConocimientos extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreignId('conocimiento_id');
             $table->foreign('conocimiento_id')->references('id')->on('conocimientos');
-            $table->foreignId('rol_id');
-            $table->foreign('rol_id')->references('id')->on('roles');
         });
     }
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRoles extends Migration
+class CreateApodos extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateRoles extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('apodos', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->boolean('crear');
-            $table->boolean('editar');
-            $table->boolean('borrar');
-            $table->boolean('ver');
+            $table->string('apodo');
+            $table->foreignId('persona_id');
+            $table->foreign('persona_id')->references('id')->on('personas');
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ class CreateRoles extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('apodos');
     }
 }
