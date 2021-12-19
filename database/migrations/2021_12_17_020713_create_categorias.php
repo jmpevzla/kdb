@@ -17,9 +17,11 @@ class CreateCategorias extends Migration
             $table->id();
             $table->string('nombre');
             $table->string('descripcion')->default('');
-            $table->foreignId('categoria_id')->nullable();
-            $table->foreign('categoria_id')->references('id')->on('categorias');
+            $table->foreignId('categoria_id')->nullable()
+              ->references('id')->on('categorias');
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -15,11 +15,8 @@ class CreateConocimientosRel extends Migration
     {
         Schema::create('conocimientos_rel', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('conocimiento_id');
-            $table->foreign('conocimiento_id')->references('id')->on('conocimientos');
-            $table->foreignId('conocimiento_rel_id');
-            $table->foreign('conocimiento_rel_id')->references('id')->on('conocimientos');
-
+            $table->foreignId('conocimiento_id')->references('id')->on('conocimientos');
+            $table->foreignId('conocimiento_rel_id')->references('id')->on('conocimientos');
         });
     }
 

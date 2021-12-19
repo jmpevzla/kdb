@@ -15,10 +15,8 @@ class CreatePersonasLinks extends Migration
     {
         Schema::create('personas_links', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('persona_id');
-            $table->foreign('persona_id')->references('id')->on('personas');
-            $table->foreignId('link_id');
-            $table->foreign('link_id')->references('id')->on('links');
+            $table->foreignId('persona_id')->references('id')->on('personas');
+            $table->foreignId('link_id')->references('id')->on('links');
         });
     }
 

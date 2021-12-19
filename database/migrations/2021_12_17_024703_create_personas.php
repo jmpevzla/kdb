@@ -19,6 +19,7 @@ class CreatePersonas extends Migration
             $table->string('bio')->default('');
             $table->string('foto')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

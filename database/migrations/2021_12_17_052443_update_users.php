@@ -14,8 +14,10 @@ class UpdateUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('persona_id');
-            $table->foreign('persona_id')->references('id')->on('personas');
+            $table->foreignId('persona_id')->after('remember_token')
+              ->references('id')->on('personas');
+
+            $table->softDeletes();
         });
     }
 
@@ -27,6 +29,7 @@ class UpdateUsers extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->dropSoftDeletes();
             $table->dropConstrainedForeignId('persona_id');
         });
     }

@@ -17,9 +17,9 @@ class CreateLinks extends Migration
             $table->id();
             $table->string('descripcion')->default('');
             $table->string('link');
-            $table->foreignId('tipo-link_id');
-            $table->foreign('tipo-link_id')->references('id')->on('tipos-links');
+            $table->foreignId('tipo-link_id')->references('id')->on('tipos-links');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

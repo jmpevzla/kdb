@@ -15,11 +15,8 @@ class CreateGruposConocimientos extends Migration
     {
         Schema::create('grupos_conocimientos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('grupo_id');
-            $table->foreign('grupo_id')->references('id')->on('grupos');
-            $table->foreignId('conocimiento_id');
-            $table->foreign('conocimiento_id')->references('id')->on('conocimientos');
-
+            $table->foreignId('grupo_id')->references('id')->on('grupos');
+            $table->foreignId('conocimiento_id')->references('id')->on('conocimientos');
         });
     }
 

@@ -15,11 +15,8 @@ class CreateCategoriasConocimientos extends Migration
     {
         Schema::create('categorias_conocimientos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('categoria_id');
-            $table->foreign('categoria_id')->references('id')->on('categorias');
-            $table->foreignId('conocimiento_id');
-            $table->foreign('conocimiento_id')->references('id')->on('conocimientos');
-
+            $table->foreignId('categoria_id')->references('id')->on('categorias');
+            $table->foreignId('conocimiento_id')->references('id')->on('conocimientos');
         });
     }
 

@@ -16,8 +16,7 @@ class CreateApodos extends Migration
         Schema::create('apodos', function (Blueprint $table) {
             $table->id();
             $table->string('apodo');
-            $table->foreignId('persona_id');
-            $table->foreign('persona_id')->references('id')->on('personas');
+            $table->foreignId('persona_id')->references('id')->on('personas');
             $table->timestamps();
         });
     }

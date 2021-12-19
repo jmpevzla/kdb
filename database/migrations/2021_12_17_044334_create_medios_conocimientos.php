@@ -15,11 +15,8 @@ class CreateMediosConocimientos extends Migration
     {
         Schema::create('medios_conocimientos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('medio_id');
-            $table->foreign('medio_id')->references('id')->on('medios');
-            $table->foreignId('conocimiento_id');
-            $table->foreign('conocimiento_id')->references('id')->on('conocimientos');
-
+            $table->foreignId('medio_id')->references('id')->on('medios');
+            $table->foreignId('conocimiento_id')->references('id')->on('conocimientos');
         });
     }
 

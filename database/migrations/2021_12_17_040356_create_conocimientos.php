@@ -16,12 +16,11 @@ class CreateConocimientos extends Migration
         Schema::create('conocimientos', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
-            $table->foreignId('tipo_id');
-            $table->foreign('tipo_id')->references('id')->on('tipos');
+            $table->foreignId('tipo_id')->references('id')->on('tipos');
             $table->longText('contenido');
             $table->date('fecha_informacion');
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

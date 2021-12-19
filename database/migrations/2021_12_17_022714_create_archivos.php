@@ -18,6 +18,7 @@ class CreateArchivos extends Migration
             $table->string('descripcion')->default('');
             $table->string('archivo');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

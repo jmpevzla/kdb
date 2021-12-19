@@ -15,10 +15,8 @@ class CreateMediosLinks extends Migration
     {
         Schema::create('medios_links', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('medio_id');
-            $table->foreign('medio_id')->references('id')->on('medios');
-            $table->foreignId('link_id');
-            $table->foreign('link_id')->references('id')->on('links');
+            $table->foreignId('medio_id')->references('id')->on('medios');
+            $table->foreignId('link_id')->references('id')->on('links');
         });
     }
 

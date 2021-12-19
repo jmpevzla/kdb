@@ -15,11 +15,8 @@ class CreateAutoresConocimientos extends Migration
     {
         Schema::create('autores_conocimientos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('persona_id');
-            $table->foreign('persona_id')->references('id')->on('personas');
-            $table->foreignId('conocimiento_id');
-            $table->foreign('conocimiento_id')->references('id')->on('conocimientos');
-
+            $table->foreignId('persona_id')->references('id')->on('personas');
+            $table->foreignId('conocimiento_id')->references('id')->on('conocimientos');
         });
     }
 

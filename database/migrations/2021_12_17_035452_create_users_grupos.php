@@ -15,10 +15,8 @@ class CreateUsersGrupos extends Migration
     {
         Schema::create('users_grupos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreignId('grupo_id');
-            $table->foreign('grupo_id')->references('id')->on('grupos');
+            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignId('grupo_id')->references('id')->on('grupos');
         });
     }
 

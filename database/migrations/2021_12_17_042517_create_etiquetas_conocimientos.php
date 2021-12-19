@@ -15,11 +15,8 @@ class CreateEtiquetasConocimientos extends Migration
     {
         Schema::create('etiquetas_conocimientos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('etiqueta_id');
-            $table->foreign('etiqueta_id')->references('id')->on('etiquetas');
-            $table->foreignId('conocimiento_id');
-            $table->foreign('conocimiento_id')->references('id')->on('conocimientos');
-
+            $table->foreignId('etiqueta_id')->references('id')->on('etiquetas');
+            $table->foreignId('conocimiento_id')->references('id')->on('conocimientos');
         });
     }
 

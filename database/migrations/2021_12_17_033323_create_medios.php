@@ -18,6 +18,7 @@ class CreateMedios extends Migration
             $table->string('nombre');
             $table->string('bio');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

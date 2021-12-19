@@ -17,6 +17,7 @@ class CreateTiposLinks extends Migration
             $table->id();
             $table->string('descripcion');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

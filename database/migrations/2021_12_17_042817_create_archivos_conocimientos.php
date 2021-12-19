@@ -15,11 +15,8 @@ class CreateArchivosConocimientos extends Migration
     {
         Schema::create('archivos_conocimientos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('archivo_id');
-            $table->foreign('archivo_id')->references('id')->on('archivos');
-            $table->foreignId('conocimiento_id');
-            $table->foreign('conocimiento_id')->references('id')->on('conocimientos');
-
+            $table->foreignId('archivo_id')->references('id')->on('archivos');
+            $table->foreignId('conocimiento_id')->references('id')->on('conocimientos');
         });
     }
 
