@@ -18,9 +18,6 @@
                                 <BreezeNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </BreezeNavLink>
-                                <BreezeNavLink :href="route('grupos.crear')" :active="route().current('grupos.crear')">
-                                    Grupos :: Crear
-                                </BreezeNavLink>
                             </div>
                         </div>
 
