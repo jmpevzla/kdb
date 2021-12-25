@@ -18,6 +18,9 @@
                                 <BreezeNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </BreezeNavLink>
+                                <BreezeNavLink :href="route('grupos.index')" :active="route().current('grupos.index')">
+                                    Grupos
+                                </BreezeNavLink>
                             </div>
                         </div>
 
@@ -63,6 +66,9 @@
                     <div class="pt-2 pb-3 space-y-1">
                         <BreezeResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
+                        </BreezeResponsiveNavLink>
+                        <BreezeResponsiveNavLink :href="route('grupos.index')" :active="route().current('grupos.index')">
+                            Grupos
                         </BreezeResponsiveNavLink>
                     </div>
 
