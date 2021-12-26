@@ -74,19 +74,19 @@
 </template>
 
 <script setup>
-import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
-import BreezeNavLink from "@/Components/NavLink.vue";
-import Pagination from "@/Components/Pagination.vue";
-import { Inertia } from "@inertiajs/inertia";
-import { Head, Link } from "@inertiajs/inertia-vue3";
-import { toRefs } from "vue";
+import { toRefs } from "vue"
+import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue"
+import BreezeNavLink from "@/Components/NavLink.vue"
+import Pagination from "@/Components/Pagination.vue"
+import { Inertia } from "@inertiajs/inertia"
+import { Head, Link } from "@inertiajs/inertia-vue3"
+import { destroyComps } from "@/Composables/generic"
 
 const props = defineProps({
   grupos: Object,
-});
-const { grupos } = toRefs(props);
+})
+const { grupos } = toRefs(props)
 
-const destroy = (id) => {
-  Inertia.delete(route("grupos.destroy", id));
-};
+const destroy = destroyComps('grupos.destroy');
+
 </script>

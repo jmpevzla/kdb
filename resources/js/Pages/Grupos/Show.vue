@@ -68,11 +68,12 @@
 </template>
 
 <script setup>
+import { toRefs, computed } from 'vue'
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import BreezeNavLink from "@/Components/NavLink.vue";
 import { Head, Link } from "@inertiajs/inertia-vue3";
-import { toRefs, computed } from 'vue'
 import { formatDatetime } from '@/Utils'
+import { destroyComps } from "@/Composables/generic";
 
 const props = defineProps({
   grupo: Object
@@ -86,5 +87,7 @@ const created_at = computed(() => {
 const updated_at = computed(() => {
   return formatDatetime(grupo.value.updated_at)
 })
+
+const destroy = destroyComps('grupos.destroy');
 
 </script>

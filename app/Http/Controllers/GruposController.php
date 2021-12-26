@@ -2,13 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\PaginateTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Grupo;
-use Illuminate\Support\Facades\Log;
+//use Log;
 
 class GruposController extends Controller
 {
+    use PaginateTrait;
+
+    /**
+     * Paginate data
+     */
+    private $paginate = 10;
+    private $model = Grupo::class;
+    private $routeIndex = 'grupos.index';
+    /***/
+
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +27,7 @@ class GruposController extends Controller
      */
     public function index()
     {
-        $grupos = Grupo::paginate(10);
+        $grupos = Grupo::paginate($this->paginate);
 
         return Inertia::render('Grupos/Index', [
             'grupos' => $grupos
@@ -30,7 +41,7 @@ class GruposController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Grupos/Create');
     }
 
     /**
@@ -41,7 +52,13 @@ class GruposController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $grupo = Grupo::create(
+            $request->validate([
+                'nombre' => ['required', 'max:255'],
+            ])
+        );
+
+        return $this->redirectSearchPage($grupo->id);
     }
 
     /**
@@ -65,7 +82,12 @@ class GruposController extends Controller
      */
     public function edit(Grupo $grupo)
     {
-        //
+        return Inertia::render('Grupos/Edit', [
+            'grupo' => [
+                'id' => $grupo->id,
+                'nombre' => $grupo->nombre,
+            ]
+        ]);
     }
 
     /**
@@ -77,7 +99,13 @@ class GruposController extends Controller
      */
     public function update(Request $request, Grupo $grupo)
     {
-        //
+        $data = $request->validate([
+            'nombre' => ['required', 'max:255'],
+        ]);
+
+        $grupo->update($data);
+
+        return $this->redirectSearchPage($grupo->id);
     }
 
     /**
@@ -88,7 +116,8 @@ class GruposController extends Controller
      */
     public function destroy(Grupo $grupo)
     {
+        $page = $this->getPage($grupo->id);
         $grupo->delete();
-        return redirect()->back();
+        return $this->redirectWithPage($page);
     }
 }
