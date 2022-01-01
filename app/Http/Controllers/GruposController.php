@@ -6,7 +6,7 @@ use App\Http\Controllers\Traits\PaginateTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Grupo;
-//use Log;
+use Log;
 
 class GruposController extends Controller
 {
@@ -67,11 +67,17 @@ class GruposController extends Controller
      */
     public function store(Request $request)
     {
-        $grupo = Grupo::create(
-            $request->validate([
-                'nombre' => ['required', 'max:255'],
-            ])
-        );
+        $req = $request->validate([
+            'nombre' => ['required', 'max:255'],
+        ]);
+
+        $grupo = Grupo::onlyTrashed()->where('nombre', '=' ,$req['nombre'])->first();
+
+        if ($grupo != null) {
+            $grupo->restore();
+        } else {
+            $grupo = Grupo::create($req);
+        }
 
         return $this->redirectSearchPage($grupo->id);
     }

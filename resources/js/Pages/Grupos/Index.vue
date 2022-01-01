@@ -67,7 +67,8 @@
                         Editar
                       </Link>
                       /
-                      <Link @click="destroy(grupo.id)" class="text-red-700"
+                      <Link preserveState="true" preserveScroll="true"
+                        @click="doConfirmDeleteVisible(grupo.id)" class="text-red-700"
                         >Borrar</Link
                       >
                     </td>
@@ -83,6 +84,13 @@
         </div>
       </div>
     </div>
+    <modal-confirm
+      v-show="isConfirmDeleteVisible"
+      modal-title="¿Borrar el grupo?"
+      confirm-message="¿Esta seguro de borrar el grupo?"
+      @confirm-event="confirmDelete"
+      @close-event="cancelDelete"
+    />
   </BreezeAuthenticatedLayout>
 </template>
 
@@ -98,6 +106,7 @@ import { pickBy, throttle } from "lodash"
 import { destroyComps } from "@/Composables/generic"
 import Icon from '@/Components/IconFontAwesome.vue'
 import HeaderTableSort from '@/Components/HeaderTableSort.vue'
+import ModalConfirm from "@/Components/ModalConfirm.vue"
 
 const props = defineProps({
   grupos: {
@@ -147,6 +156,12 @@ const sort = (field) => {
   params.direction = 'asc'
 }
 
-const destroy = destroyComps('grupos.destroy');
+
+const {
+  isShowConfirm: isConfirmDeleteVisible,
+  showConfirm: doConfirmDeleteVisible,
+  cancelAction: cancelDelete,
+  deleteAction: confirmDelete
+} = destroyComps('grupos.destroy')
 
 </script>
