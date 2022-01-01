@@ -27,10 +27,25 @@ class GruposController extends Controller
      */
     public function index()
     {
-        $grupos = Grupo::paginate($this->paginate);
+        request()->validate([
+            //'page' => ['bail|numeric|integer|gt:0']
+            'direction' => ['in:asc,desc'],
+		    'field' => ['in:id,nombre']
+        ]);
+
+        $query = Grupo::query();
+
+        if (request('search')) {
+            $query->where('nombre', 'LIKE', '%'.request('search').'%');
+        }
+
+        if (request()->has(['field', 'direction'])) {
+            $query->orderBy(request('field'), request('direction'));
+        }
 
         return Inertia::render('Grupos/Index', [
-            'grupos' => $grupos
+            'grupos' => $query->paginate($this->paginate),
+            'filters' => request()->all(['search', 'field', 'direction'])
         ]);
     }
 

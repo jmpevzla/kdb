@@ -9,7 +9,7 @@
     </template>
 
     <div class="py-6">
-      <div class="mx-auto w-fit max-w-7xl sm:px-6 lg:px-8">
+      <div class="mx-auto w-full lg:w-[40rem] sm:px-6 lg:px-8">
         <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
           <div
             class="
@@ -20,7 +20,7 @@
               border-b border-gray-200
             "
           >
-            <div>
+            <div class="w-full">
               <div class="mb-4 text-right">
                 <Link
                   class="px-6 py-2 mb-2 text-green-100 bg-green-500 rounded"
@@ -29,10 +29,23 @@
                   Crear Grupo
                 </Link>
               </div>
-              <table>
+
+              <div class="mb-2">
+                <BreezeInput id="search" type="search"
+                  class="block w-full" autofocus
+                  v-model="params.search"
+                  placeholder="Buscar"
+                />
+              </div>
+
+              <table class="w-full">
                 <thead class="font-bold bg-gray-300 border-b-2">
-                  <td class="px-4 py-2">ID</td>
-                  <td class="px-4 py-2">Nombre</td>
+                  <td class="px-4 py-2">
+                    <header-table-sort title="ID" field="id" :params="params" @click="sort('id')" />
+                  </td>
+                  <td class="px-4 py-2">
+                    <header-table-sort title="Nombre" field="nombre" :params="params" @click="sort('nombre')" />
+                  </td>
                   <td class="px-4 py-2">Acción</td>
                 </thead>
                 <tbody>
@@ -74,18 +87,65 @@
 </template>
 
 <script setup>
-import { toRefs } from "vue"
+import { reactive, toRefs, watch } from "vue"
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue"
 import BreezeNavLink from "@/Components/NavLink.vue"
 import Pagination from "@/Components/Pagination.vue"
+import BreezeInput from "@/Components/Input.vue"
 import { Inertia } from "@inertiajs/inertia"
 import { Head, Link } from "@inertiajs/inertia-vue3"
+import { pickBy, throttle } from "lodash"
 import { destroyComps } from "@/Composables/generic"
+import Icon from '@/Components/IconFontAwesome.vue'
+import HeaderTableSort from '@/Components/HeaderTableSort.vue'
 
 const props = defineProps({
-  grupos: Object,
+  grupos: {
+    type: Object,
+    required: true
+  },
+  filters: Object
 })
-const { grupos } = toRefs(props)
+const { grupos, filters } = toRefs(props)
+const { search, field, direction } = filters.value
+
+const params = reactive({
+  search,
+  field,
+  direction
+})
+
+watch(params, throttle(() => {
+  Inertia.get(route('grupos.index'), pickBy({ ...params }, (value) => value), {
+    replace: true,
+    preserveState: true,
+    preserveScroll: true
+  })
+}, {
+  deep: true
+}, 500))
+
+const sort = (field) => {
+
+  if (params.field !== field) {
+    params.field = field
+    params.direction = 'asc'
+    return
+  }
+
+  if (params.direction === 'desc') {
+    params.direction = null
+    params.field = null
+    return
+  }
+
+  if(params.direction === 'asc') {
+    params.direction = 'desc'
+    return
+  }
+
+  params.direction = 'asc'
+}
 
 const destroy = destroyComps('grupos.destroy');
 
