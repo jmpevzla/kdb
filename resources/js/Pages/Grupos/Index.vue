@@ -1,7 +1,7 @@
 <template>
   <Head title="Grupos" />
 
-  <BreezeAuthenticatedLayout>
+  <breeze-authenticated-layout>
     <template #header>
       <h2 class="text-xl text-center font-semibold leading-tight text-gray-800">
         Grupos
@@ -31,7 +31,7 @@
               </div>
 
               <div class="mb-2">
-                <BreezeInput id="search" type="search"
+                <breeze-input id="search" type="search"
                   class="block w-full" autofocus
                   v-model="params.search"
                   placeholder="Buscar"
@@ -41,10 +41,12 @@
               <table class="w-full">
                 <thead class="font-bold bg-gray-300 border-b-2">
                   <td class="px-4 py-2">
-                    <header-table-sort title="ID" field="id" :params="params" @click="sort('id')" />
+                    <header-table-sort title="ID" field="id"
+                      :params="params" @click="sort('id')" />
                   </td>
                   <td class="px-4 py-2">
-                    <header-table-sort title="Nombre" field="nombre" :params="params" @click="sort('nombre')" />
+                    <header-table-sort title="Nombre" field="nombre"
+                      :params="params" @click="sort('nombre')" />
                   </td>
                   <td class="px-4 py-2">Acción</td>
                 </thead>
@@ -75,7 +77,7 @@
                   </tr>
                 </tbody>
               </table>
-              <pagination
+              <pagination-links
                 class="flex justify-center mt-4"
                 :links="grupos.links"
               />
@@ -91,20 +93,19 @@
       @confirm-event="confirmDelete"
       @close-event="cancelDelete"
     />
-  </BreezeAuthenticatedLayout>
+  </breeze-authenticated-layout>
 </template>
 
 <script setup>
 import { reactive, toRefs, watch } from "vue"
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue"
 import BreezeNavLink from "@/Components/NavLink.vue"
-import Pagination from "@/Components/Pagination.vue"
 import BreezeInput from "@/Components/Input.vue"
+import PaginationLinks from "@/Components/PaginationLinks.vue"
 import { Inertia } from "@inertiajs/inertia"
 import { Head, Link } from "@inertiajs/inertia-vue3"
 import { pickBy, throttle } from "lodash"
 import { destroyComps } from "@/Composables/generic"
-import Icon from '@/Components/IconFontAwesome.vue'
 import HeaderTableSort from '@/Components/HeaderTableSort.vue'
 import ModalConfirm from "@/Components/ModalConfirm.vue"
 
@@ -155,7 +156,6 @@ const sort = (field) => {
 
   params.direction = 'asc'
 }
-
 
 const {
   isShowConfirm: isConfirmDeleteVisible,

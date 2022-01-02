@@ -25,12 +25,12 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
 
-
-Route::resource('grupos', GruposController::class)
-    ->middleware(['auth', 'verified']);
+    Route::resource('grupos', GruposController::class);
+});
 
 require __DIR__.'/auth.php';
