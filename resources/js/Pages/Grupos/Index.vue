@@ -70,7 +70,7 @@
                       </Link>
                       /
                       <Link preserveState="true" preserveScroll="true"
-                        @click="doConfirmDeleteVisible(grupo.id)" class="text-red-700"
+                        @click="doConfirmDeleteVisible(grupo.id, grupo.nombre)" class="text-red-700"
                         >Borrar</Link
                       >
                     </td>
@@ -88,8 +88,8 @@
     </div>
     <modal-confirm
       v-show="isConfirmDeleteVisible"
-      modal-title="¿Borrar el grupo?"
-      confirm-message="¿Esta seguro de borrar el grupo?"
+      :modal-title="`¿Borrar a ${confirmDeleteName}?`"
+      confirm-message="¿Esta seguro de borrar a el grupo?"
       @confirm-event="confirmDelete"
       @close-event="cancelDelete"
     />
@@ -159,6 +159,7 @@ const sort = (field) => {
 
 const {
   isShowConfirm: isConfirmDeleteVisible,
+  entityStr: confirmDeleteName,
   showConfirm: doConfirmDeleteVisible,
   cancelAction: cancelDelete,
   deleteAction: confirmDelete

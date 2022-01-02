@@ -27,7 +27,8 @@
                   Editar
                 </Link>
                 /
-                <Link @click="destroy(grupo.id)" class="text-red-700"
+                <Link :preserveState="true" :preserveScroll="true"
+                  @click="doConfirmDeleteVisible(grupo.id, grupo.nombre)" class="text-red-700"
                   >Borrar</Link
                 >
               </div>
@@ -64,6 +65,13 @@
         </div>
       </div>
     </div>
+    <modal-confirm
+      v-show="isConfirmDeleteVisible"
+      :modal-title="`¿Borrar a ${confirmDeleteName}?`"
+      confirm-message="¿Esta seguro de borrar a el grupo?"
+      @confirm-event="confirmDelete"
+      @close-event="cancelDelete"
+    />
   </BreezeAuthenticatedLayout>
 </template>
 
@@ -74,6 +82,7 @@ import BreezeNavLink from "@/Components/NavLink.vue";
 import { Head, Link } from "@inertiajs/inertia-vue3";
 import { formatDatetime } from '@/Utils'
 import { destroyComps } from "@/Composables/generic";
+import ModalConfirm from '@/Components/ModalConfirm.vue';
 
 const props = defineProps({
   grupo: Object
@@ -88,6 +97,12 @@ const updated_at = computed(() => {
   return formatDatetime(grupo.value.updated_at)
 })
 
-const destroy = destroyComps('grupos.destroy');
+const {
+  isShowConfirm: isConfirmDeleteVisible,
+  entityStr: confirmDeleteName,
+  showConfirm: doConfirmDeleteVisible,
+  cancelAction: cancelDelete,
+  deleteAction: confirmDelete
+} = destroyComps('grupos.destroy')
 
 </script>
