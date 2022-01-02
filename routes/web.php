@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\GruposController;
 use App\Http\Controllers\PersonasController;
 use App\Http\Controllers\MediosController;
+use App\Http\Controllers\EtiquetasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('grupos', GruposController::class);
     Route::resource('personas', PersonasController::class);
     Route::resource('medios', MediosController::class);
+    Route::resource('etiquetas', EtiquetasController::class);
 });
 
 require __DIR__.'/auth.php';

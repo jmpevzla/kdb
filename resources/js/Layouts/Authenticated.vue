@@ -27,6 +27,9 @@
                                 <BreezeNavLink :href="route('medios.index')" :active="route().current('medios.index')">
                                     Medios
                                 </BreezeNavLink>
+                                <BreezeNavLink :href="route('etiquetas.index')" :active="route().current('etiquetas.index')">
+                                    Etiquetas
+                                </BreezeNavLink>
                             </div>
                         </div>
 
@@ -79,8 +82,11 @@
                          <BreezeResponsiveNavLink :href="route('personas.index')" :active="route().current('personas.index')">
                             Personas
                         </BreezeResponsiveNavLink>
-                         <BreezeResponsiveNavLink :href="route('medios.index')" :active="route().current('medios.index')">
+                        <BreezeResponsiveNavLink :href="route('medios.index')" :active="route().current('medios.index')">
                             Medios
+                        </BreezeResponsiveNavLink>
+                        <BreezeResponsiveNavLink :href="route('etiquetas.index')" :active="route().current('etiquetas.index')">
+                            Etiquetas
                         </BreezeResponsiveNavLink>
                     </div>
 

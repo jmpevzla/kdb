@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Traits\PaginateTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Medio;
+use App\Models\Etiqueta;
 use Log;
 
-class MediosController extends Controller
+class EtiquetasController extends Controller
 {
     use PaginateTrait;
 
@@ -16,8 +16,8 @@ class MediosController extends Controller
      * Paginate data
      */
     private $paginate = 10;
-    private $model = Medio::class;
-    private $routeIndex = 'medios.index';
+    private $model = Etiqueta::class;
+    private $routeIndex = 'etiquetas.index';
     /***/
 
     /**
@@ -28,23 +28,23 @@ class MediosController extends Controller
     public function index()
     {
         request()->validate([
+            //'page' => ['bail|numeric|integer|gt:0']
             'direction' => ['in:asc,desc'],
 		    'field' => ['in:id,nombre']
         ]);
 
-        $query = Medio::query();
+        $query = Etiqueta::query();
 
         if (request('search')) {
-            $query->where('nombre', 'LIKE', '%'.request('search').'%')
-                ->orWhere('bio', 'LIKE', '%'.request('search').'%');
+            $query->where('nombre', 'LIKE', '%'.request('search').'%');
         }
 
         if (request()->has(['field', 'direction'])) {
             $query->orderBy(request('field'), request('direction'));
         }
 
-        return Inertia::render('Medios/Index', [
-            'medios' => $query->paginate($this->paginate),
+        return Inertia::render('Etiquetas/Index', [
+            'etiquetas' => $query->paginate($this->paginate),
             'filters' => request()->all(['search', 'field', 'direction'])
         ]);
     }
@@ -56,7 +56,7 @@ class MediosController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Medios/Create');
+        return Inertia::render('Etiquetas/Create');
     }
 
     /**
@@ -69,46 +69,44 @@ class MediosController extends Controller
     {
         $req = $request->validate([
             'nombre' => ['required', 'max:255'],
-            'bio' => ['max:255'],
         ]);
 
-        $medio = Medio::onlyTrashed()->where('nombre', '=' ,$req['nombre'])->first();
+        $etiqueta = Etiqueta::onlyTrashed()->where('nombre', '=' ,$req['nombre'])->first();
 
-        if ($medio != null) {
-            $medio->restore();
+        if ($etiqueta != null) {
+            $etiqueta->restore();
         } else {
-            $medio = Medio::create($req);
+            $etiqueta = Etiqueta::create($req);
         }
 
-        return $this->redirectSearchPage($medio->id);
+        return $this->redirectSearchPage($etiqueta->id);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Medio  $medio
+     * @param  \App\Models\Etiqueta  $etiqueta
      * @return \Illuminate\Http\Response
      */
-    public function show(Medio $medio)
+    public function show(Etiqueta $etiqueta)
     {
-        return Inertia::render('Medios/Show', [
-            'medio' => $medio
+        return Inertia::render('Etiquetas/Show', [
+            'etiqueta' => $etiqueta
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Medio  $medio
+     * @param  \App\Models\Etiqueta  $etiqueta
      * @return \Illuminate\Http\Response
      */
-    public function edit(Medio $medio)
+    public function edit(Etiqueta $etiqueta)
     {
-        return Inertia::render('Medios/Edit', [
-            'medio' => [
-                'id' => $medio->id,
-                'nombre' => $medio->nombre,
-                'bio' => $medio->bio
+        return Inertia::render('Etiquetas/Edit', [
+            'etiqueta' => [
+                'id' => $etiqueta->id,
+                'nombre' => $etiqueta->nombre,
             ]
         ]);
     }
@@ -117,31 +115,30 @@ class MediosController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Medio  $medio
+     * @param  \App\Models\Etiqueta $etiqueta
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Medio $medio)
+    public function update(Request $request, Etiqueta $etiqueta)
     {
         $data = $request->validate([
             'nombre' => ['required', 'max:255'],
-            'bio' => ['max: 255']
         ]);
 
-        $medio->update($data);
+        $etiqueta->update($data);
 
-        return $this->redirectSearchPage($medio->id);
+        return $this->redirectSearchPage($etiqueta->id);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Medio  $medio
+     * @param  \App\Models\Etiqueta  $etiqueta
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Medio $medio)
+    public function destroy(Etiqueta $etiqueta)
     {
-        $page = $this->getPage($medio->id);
-        $medio->delete();
+        $page = $this->getPage($etiqueta->id);
+        $etiqueta->delete();
         return $this->redirectWithPage($page);
     }
 }
