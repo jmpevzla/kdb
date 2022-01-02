@@ -1,10 +1,10 @@
 <template>
-    <Head title="Grupos" />
+    <Head title="Medios" />
 
     <BreezeAuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Crear un Grupo
+                Editar un Medio
             </h2>
         </template>
 
@@ -31,6 +31,23 @@
                                     "
                                 />
                             </div>
+                            <div>
+                                <label for="title">Bio</label>
+                                <textarea
+                                    v-model="form.bio"
+                                    class="
+                                        w-full
+                                        px-4
+                                        py-2
+                                        mt-2
+                                        border
+                                        rounded-md
+                                        focus:outline-none
+                                        focus:ring-1
+                                        focus:ring-blue-600
+                                    "
+                                ></textarea>
+                            </div>
                             <!-- submit -->
                             <div class="flex items-center mt-4">
                                 <button
@@ -42,7 +59,7 @@
                                         rounded
                                     "
                                 >
-                                    Crear
+                                    Guardar
                                 </button>
                             </div>
                         </form>
@@ -54,17 +71,23 @@
 </template>
 
 <script setup>
+import { toRefs } from "vue";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
-import BreezeLabel from "@/Components/Label";
 import { Head } from "@inertiajs/inertia-vue3";
 import { useForm } from "@inertiajs/inertia-vue3";
 
+const props = defineProps({
+  medio: Object
+})
+const { medio } = toRefs(props)
+
 const form = useForm({
-  nombre: null
+    nombre: medio.value.nombre,
+    bio: medio.value.bio
 });
 
 const submit = () => {
-  form.post(route("grupos.store"));
+  form.put(route("medios.update", medio.value.id));
 }
 
 </script>
