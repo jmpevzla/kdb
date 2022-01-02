@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Traits\GetTableNameStatically;
 
 class Persona extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes, GetTableNameStatically;
 
     /**
      * The attributes that are mass assignable.
@@ -16,5 +18,6 @@ class Persona extends Model
      */
     protected $fillable = [
         'nombre',
+        'bio'
     ];
 }

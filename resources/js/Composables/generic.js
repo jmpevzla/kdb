@@ -3,10 +3,12 @@ import { Inertia } from "@inertiajs/inertia"
 
 export function destroyComps (routeStr) {
   const isShowConfirm = ref(false)
+  const entityStr = ref('')
   let _id = -1
 
-  const showConfirm = (id) => {
+  const showConfirm = (id, str = 'entidad') => {
     isShowConfirm.value = true
+    entityStr.value = str
     _id = id
   }
 
@@ -23,6 +25,7 @@ export function destroyComps (routeStr) {
 
   return {
     isShowConfirm,
+    entityStr,
     showConfirm,
     cancelAction,
     deleteAction

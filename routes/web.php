@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\GruposController;
+use App\Http\Controllers\PersonasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::resource('grupos', GruposController::class);
+    Route::resource('personas', PersonasController::class);
 });
 
 require __DIR__.'/auth.php';
