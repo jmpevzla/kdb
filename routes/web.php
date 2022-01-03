@@ -8,6 +8,7 @@ use App\Http\Controllers\PersonasController;
 use App\Http\Controllers\MediosController;
 use App\Http\Controllers\EtiquetasController;
 use App\Http\Controllers\CategoriasController;
+use App\Http\Controllers\TiposController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('medios', MediosController::class);
     Route::resource('etiquetas', EtiquetasController::class);
     Route::resource('categorias', CategoriasController::class);
+    Route::resource('tipos', TiposController::class);
 
 });
 
