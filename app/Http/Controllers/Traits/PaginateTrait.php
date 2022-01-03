@@ -3,9 +3,6 @@
 namespace App\Http\Controllers\Traits;
 use Illuminate\Support\Facades\DB;
 
-
-use Log;
-
 trait PaginateTrait
 {
     private function getPage(int $id)
@@ -15,7 +12,7 @@ trait PaginateTrait
         $res = DB::select('
             SELECT id, pos FROM
             (SELECT id, created_at, (@rownum:= @rownum + 1) as pos
-                FROM '. $model->tableName() .' JOIN (SELECT @rownum := -1) s
+                FROM `'. $model->tableName() .'` JOIN (SELECT @rownum := -1) s
                 WHERE deleted_at IS NULL) as ent_pos
             WHERE id = ?
         ', [$id]);
