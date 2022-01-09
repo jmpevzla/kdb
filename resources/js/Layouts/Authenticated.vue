@@ -39,6 +39,9 @@
                                 <BreezeNavLink :href="route('tipos-links.index')" :active="route().current('tipos-links.index')">
                                     Tipos de Links
                                 </BreezeNavLink>
+                                <BreezeNavLink :href="route('links.index')" :active="route().current('links.index')">
+                                    Links
+                                </BreezeNavLink>
                             </div>
                         </div>
 
@@ -105,6 +108,9 @@
                         </BreezeResponsiveNavLink>
                         <BreezeResponsiveNavLink :href="route('tipos-links.index')" :active="route().current('tipos-links.index')">
                             Tipos de Links
+                        </BreezeResponsiveNavLink>
+                        <BreezeResponsiveNavLink :href="route('links.index')" :active="route().current('links.index')">
+                            Links
                         </BreezeResponsiveNavLink>
                     </div>
 

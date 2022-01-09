@@ -10,6 +10,7 @@ use App\Http\Controllers\EtiquetasController;
 use App\Http\Controllers\CategoriasController;
 use App\Http\Controllers\TiposController;
 use App\Http\Controllers\TiposLinksController;
+use App\Http\Controllers\LinksController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('categorias', CategoriasController::class);
     Route::resource('tipos', TiposController::class);
     Route::resource('tipos-links', TiposLinksController::class);
+    Route::resource('links', LinksController::class);
 
 });
 
