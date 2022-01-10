@@ -44,7 +44,7 @@ class GruposController extends Controller
         }
 
         return Inertia::render('Grupos/Index', [
-            'grupos' => $query->paginate($this->paginate),
+            'grupos' => $query->select('*')->paginate($this->paginate)->withQueryString(),
             'filters' => request()->all(['search', 'field', 'direction'])
         ]);
     }

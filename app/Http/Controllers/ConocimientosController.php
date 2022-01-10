@@ -62,7 +62,8 @@ class ConocimientosController extends Controller
         }
 
         return Inertia::render('Conocimientos/Index', [
-            'conocimientos' => $query->select('id', 'descripcion', 'tipo_id', 'updated_at')->paginate($this->paginate),
+            'conocimientos' => $query->select('id', 'descripcion', 'tipo_id', 'updated_at')
+                ->paginate($this->paginate)->withQueryString(),
             'filters' => request()->all(['search', 'field', 'direction'])
         ]);
     }

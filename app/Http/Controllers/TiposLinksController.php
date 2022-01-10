@@ -44,7 +44,7 @@ class TiposLinksController extends Controller
         }
 
         return Inertia::render('TiposLinks/Index', [
-            'tiposLinks' => $query->paginate($this->paginate),
+            'tiposLinks' => $query->select('*')->paginate($this->paginate)->withQueryString(),
             'filters' => request()->all(['search', 'field', 'direction'])
         ]);
     }

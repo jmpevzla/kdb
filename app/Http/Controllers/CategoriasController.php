@@ -44,7 +44,7 @@ class CategoriasController extends Controller
         }
 
         return Inertia::render('Categorias/Index', [
-            'categorias' => $query->paginate($this->paginate),
+            'categorias' => $query->select('*')->paginate($this->paginate)->withQueryString(),
             'filters' => request()->all(['search', 'field', 'direction'])
         ]);
     }

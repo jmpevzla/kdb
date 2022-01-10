@@ -61,7 +61,7 @@ class LinksController extends Controller
         }
 
         return Inertia::render('Links/Index', [
-            'links' => $query->paginate($this->paginate),
+            'links' => $query->select('*')->paginate($this->paginate)->withQueryString(),
             'filters' => request()->all(['search', 'field', 'direction'])
         ]);
     }

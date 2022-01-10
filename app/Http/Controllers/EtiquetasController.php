@@ -44,7 +44,7 @@ class EtiquetasController extends Controller
         }
 
         return Inertia::render('Etiquetas/Index', [
-            'etiquetas' => $query->paginate($this->paginate),
+            'etiquetas' => $query->select('*')->paginate($this->paginate)->withQueryString(),
             'filters' => request()->all(['search', 'field', 'direction'])
         ]);
     }

@@ -44,7 +44,7 @@ class TiposController extends Controller
         }
 
         return Inertia::render('Tipos/Index', [
-            'tipos' => $query->paginate($this->paginate),
+            'tipos' => $query->select('*')->paginate($this->paginate)->withQueryString(),
             'filters' => request()->all(['search', 'field', 'direction'])
         ]);
     }

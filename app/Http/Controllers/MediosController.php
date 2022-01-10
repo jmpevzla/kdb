@@ -44,7 +44,7 @@ class MediosController extends Controller
         }
 
         return Inertia::render('Medios/Index', [
-            'medios' => $query->paginate($this->paginate),
+            'medios' => $query->select('*')->paginate($this->paginate)->withQueryString(),
             'filters' => request()->all(['search', 'field', 'direction'])
         ]);
     }

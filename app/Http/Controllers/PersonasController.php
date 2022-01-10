@@ -44,7 +44,7 @@ class PersonasController extends Controller
         }
 
         return Inertia::render('Personas/Index', [
-            'personas' => $query->paginate($this->paginate),
+            'personas' => $query->select('*')->paginate($this->paginate)->withQueryString(),
             'filters' => request()->all(['search', 'field', 'direction'])
         ]);
     }
