@@ -69,7 +69,7 @@
                         Editar
                       </Link>
                       /
-                      <Link preserveState="true" preserveScroll="true"
+                      <Link :preserveState="true" :preserveScroll="true"
                         @click="doConfirmDeleteVisible(tipo.id, tipo.nombre)" class="text-red-700"
                         >Borrar</Link
                       >
