@@ -6,6 +6,7 @@ use App\Http\Controllers\Traits\PaginateTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Conocimiento;
+use App\Models\Tipo;
 use Log;
 
 class ConocimientosController extends Controller
@@ -73,7 +74,11 @@ class ConocimientosController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Conocimientos/Create');
+        $tipos = Tipo::all(['id', 'nombre']);
+
+        return Inertia::render('Conocimientos/Create', [
+            'tipos' => $tipos
+        ]);
     }
 
     /**
@@ -112,6 +117,8 @@ class ConocimientosController extends Controller
      */
     public function edit(Conocimiento $conocimiento)
     {
+        $tipos = Tipo::all(['id', 'nombre']);
+
         return Inertia::render('Conocimientos/Edit', [
             'conocimiento' => [
                 'id' => $conocimiento->id,
@@ -119,7 +126,8 @@ class ConocimientosController extends Controller
                 'tipo_id' => $conocimiento->tipo_id,
                 'contenido' => $conocimiento->contenido,
                 'fecha_informacion' => $conocimiento->fecha_informacion
-            ]
+            ],
+            'tipos' => $tipos
         ]);
     }
 

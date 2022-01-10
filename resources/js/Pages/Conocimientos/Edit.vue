@@ -32,21 +32,27 @@
                                 />
                             </div>
                             <div class="mb-2">
-                                <label for="title">Contenido</label>
-                                <textarea
-                                    v-model="form.contenido"
-                                    class="
-                                        w-full
-                                        px-4
-                                        py-2
-                                        mt-2
-                                        border
-                                        rounded-md
-                                        focus:outline-none
-                                        focus:ring-1
-                                        focus:ring-blue-600
-                                    "
-                                ></textarea>
+                                <label for="tipoSelect">Tipo</label>
+                                <select
+                                  id="tipoSelect"
+                                  required
+                                  class="
+                                    w-full
+                                    px-4
+                                    py-2
+                                    mt-2
+                                    border
+                                    rounded-md
+                                    focus:outline-none
+                                    focus:ring-1
+                                    focus:ring-blue-600
+                                  "
+                                  v-model="form.tipo_id">
+
+                                  <option v-for="tipo of tipos"
+                                    :key="tipo.id"
+                                    :value="tipo.id">{{ tipo.nombre }}</option>
+                                </select>
                             </div>
                             <div class="mb-2">
                                 <label for="title">Fecha de Información</label>
@@ -65,6 +71,23 @@
                                         focus:ring-blue-600
                                     "
                                 />
+                            </div>
+                            <div class="mb-2">
+                                <label for="title">Contenido</label>
+                                <textarea
+                                    v-model="form.contenido"
+                                    class="
+                                        w-full
+                                        px-4
+                                        py-2
+                                        mt-2
+                                        border
+                                        rounded-md
+                                        focus:outline-none
+                                        focus:ring-1
+                                        focus:ring-blue-600
+                                    "
+                                ></textarea>
                             </div>
                             <!-- submit -->
                             <div class="flex items-center mt-4">
@@ -95,11 +118,10 @@ import { Head } from "@inertiajs/inertia-vue3";
 import { useForm } from "@inertiajs/inertia-vue3";
 
 const props = defineProps({
-  conocimiento: Object
+  conocimiento: Object,
+  tipos: Array
 })
-const { conocimiento } = toRefs(props)
-
-console.log(conocimiento.value)
+const { conocimiento, tipos } = toRefs(props)
 
 const form = useForm({
   descripcion: conocimiento.value.descripcion,

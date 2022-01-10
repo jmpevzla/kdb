@@ -34,9 +34,9 @@
                                 />
                             </div>
                             <div class="mb-2">
-                                <label for="tipoSelect">Tipo de Link</label>
+                                <label for="tipoLinkSelect">Tipo de Link</label>
                                 <select
-                                  id="tipoSelect"
+                                  id="tipoLinkSelect"
                                   required
                                   class="
                                     w-full
