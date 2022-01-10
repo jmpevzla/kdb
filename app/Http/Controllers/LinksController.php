@@ -6,6 +6,7 @@ use App\Http\Controllers\Traits\PaginateTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Link;
+use App\Models\TiposLink;
 use Log;
 
 class LinksController extends Controller
@@ -72,7 +73,11 @@ class LinksController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Links/Create');
+        $tiposLinks = TiposLink::all(['id', 'descripcion']);
+
+        return Inertia::render('Links/Create', [
+            'tiposLinks' => $tiposLinks
+        ]);
     }
 
     /**
@@ -111,13 +116,16 @@ class LinksController extends Controller
      */
     public function edit(Link $link)
     {
+        $tiposLinks = TiposLink::all(['id', 'descripcion']);
+
         return Inertia::render('Links/Edit', [
             'link' => [
                 'id' => $link->id,
                 'descripcion' => $link->descripcion,
                 'link' => $link->link,
                 'tipo-link_id' => $link['tipo-link_id']
-            ]
+            ],
+            'tiposLinks' => $tiposLinks
         ]);
     }
 

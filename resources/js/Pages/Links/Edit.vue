@@ -14,8 +14,10 @@
                     <div class="p-6 bg-white border-b border-gray-200">
                         <form @submit.prevent="submit">
                             <div class="mb-2">
-                                <label for="title">Descripcion</label>
+                                <label for="descInput">Descripcion</label>
                                 <input
+                                    id="descInput"
+                                    required
                                     type="text"
                                     v-model="form.descripcion"
                                     class="
@@ -31,10 +33,35 @@
                                     "
                                 />
                             </div>
+                            <div class="mb-2">
+                                <label for="tipoSelect">Tipo de Link</label>
+                                <select
+                                  id="tipoSelect"
+                                  required
+                                  class="
+                                    w-full
+                                    px-4
+                                    py-2
+                                    mt-2
+                                    border
+                                    rounded-md
+                                    focus:outline-none
+                                    focus:ring-1
+                                    focus:ring-blue-600
+                                  "
+                                  v-model="form['tipo-link_id']">
+
+                                  <option v-for="tipo of tiposLinks"
+                                    :key="tipo.id"
+                                    :value="tipo.id">{{ tipo.descripcion }}</option>
+                                </select>
+                            </div>
                             <div>
-                                <label for="title">Link</label>
+                                <label for="linkInput">Link</label>
                                 <input
+                                    id="linkInput"
                                     type="url"
+                                    required
                                     v-model="form.link"
                                     class="
                                         w-full
@@ -78,9 +105,10 @@ import { Head } from "@inertiajs/inertia-vue3";
 import { useForm } from "@inertiajs/inertia-vue3";
 
 const props = defineProps({
-  link: Object
+  link: Object,
+  tiposLinks: Array
 })
-const { link } = toRefs(props)
+const { link, tiposLinks } = toRefs(props)
 
 const form = useForm({
   descripcion: link.value.descripcion,

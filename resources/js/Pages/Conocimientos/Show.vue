@@ -105,7 +105,8 @@
             <section>
               <h3 class="text-xl font-bold mb-4 text-center select-none">Contenido</h3>
 
-              <code>{{ conocimiento.contenido }}</code>
+              <!-- <code>{{ conocimiento.contenido }}</code> -->
+              <div v-html="contenido"></div>
             </section>
           </div>
         </div>
@@ -123,16 +124,28 @@
 
 <script setup>
 import { toRefs, computed } from 'vue'
-import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
-import { Head, Link } from "@inertiajs/inertia-vue3";
+import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue"
+import { Head, Link } from "@inertiajs/inertia-vue3"
 import { formatDatetime, formatDate } from '@/Utils'
-import { destroyComps } from "@/Composables/generic";
+import DOMPurify from 'dompurify'
+import { marked } from 'marked'
+import { destroyComps } from "@/Composables/generic"
 import ModalConfirm from "@/Components/ModalConfirm.vue"
 
 const props = defineProps({
   conocimiento: Object
 })
 const { conocimiento } = toRefs(props)
+
+const contenido = computed(() => {
+  const cont =  marked.parse(conocimiento.value.contenido, {
+    breaks: true
+  })
+
+  return DOMPurify.sanitize(cont,
+    {USE_PROFILES: {html: true},
+    FORBID_TAGS: ['input', 'select', 'textarea']})
+})
 
 const created_at = computed(() => {
   return formatDatetime(conocimiento.value.created_at)

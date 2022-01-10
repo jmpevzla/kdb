@@ -27,6 +27,8 @@
         "vue-loader": "^16.1.2"
     },
     "dependencies": {
-        "@fortawesome/fontawesome-free": "^5.15.4"
+        "@fortawesome/fontawesome-free": "^5.15.4",
+        "dompurify": "^2.3.4",
+        "marked": "^4.0.9"
     }
 }
