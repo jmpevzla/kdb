@@ -106,7 +106,7 @@
               <h3 class="text-xl font-bold mb-4 text-center select-none">Contenido</h3>
 
               <!-- <code>{{ conocimiento.contenido }}</code> -->
-              <div v-html="contenido"></div>
+              <div id="content" v-html="contenido"></div>
             </section>
           </div>
         </div>
@@ -121,6 +121,12 @@
     />
   </BreezeAuthenticatedLayout>
 </template>
+
+<style>
+  div#content *{
+    margin-bottom: 1.25rem;
+  }
+</style>
 
 <script setup>
 import { toRefs, computed } from 'vue'
