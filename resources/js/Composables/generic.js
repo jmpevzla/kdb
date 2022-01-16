@@ -32,3 +32,42 @@ export function destroyComps (routeStr) {
   }
 }
 
+export function createComps ({
+  routeStr = '',
+  nameValue = '',
+  idRel = 0
+}) {
+  const isShowModal = ref(false)
+  // const entityStr = ref('')
+  // let _id = -1
+
+  const showModal = () => {
+    isShowModal.value = true
+  }
+
+  const cancelAction = () => {
+    isShowModal.value = false
+  }
+
+  const createAction = (value) => {
+    // Inertia.delete(route(routeStr, _id), {
+    //   preserveScroll: true
+    // });
+    Inertia.post(route(routeStr, idRel), {
+      [nameValue]: value
+    } , {
+      preserveScroll: true,
+      preserveState: true
+    })
+    //console.log({ [nameValue]: value, ...addData })
+    isShowModal.value = false
+  }
+
+  return {
+    isShowModal,
+    showModal,
+    cancelAction,
+    createAction
+  }
+}
+

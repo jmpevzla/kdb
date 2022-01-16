@@ -44,6 +44,14 @@
                 </div>
                 <div class="table-row">
                   <p class="table-cell font-bold text-right pb-4">
+                    Apodos:
+                  </p>
+                  <p class="table-cell text-center break-words w-64 px-4 pb-4">
+                    ---
+                  </p>
+                </div>
+                <div class="table-row">
+                  <p class="table-cell font-bold text-right pb-4">
                     Creado el:
                   </p>
                   <p class="table-cell text-center">

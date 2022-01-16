@@ -11,6 +11,8 @@ class Persona extends Model
 {
     use HasFactory, SoftDeletes, GetTableNameStatically;
 
+    protected $with = ['apodos:id,apodo,persona_id'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -20,4 +22,8 @@ class Persona extends Model
         'nombre',
         'bio'
     ];
+
+    public function apodos() {
+        return $this->hasMany(Apodo::class, 'persona_id', 'id');
+    }
 }

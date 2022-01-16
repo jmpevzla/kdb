@@ -13,9 +13,10 @@
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
                         <form @submit.prevent="submit">
-                            <div>
-                                <label for="title">Nombre</label>
+                            <div class="mb-2">
+                                <label class="font-bold" for="nombre">Nombre</label>
                                 <input
+                                    id="nombre"
                                     type="text"
                                     v-model="form.nombre"
                                     class="
@@ -31,9 +32,10 @@
                                     "
                                 />
                             </div>
-                            <div>
-                                <label for="title">Bio</label>
+                            <div class="mb-2">
+                                <label class="font-bold" for="bio">Bio</label>
                                 <textarea
+                                    id="bio"
                                     v-model="form.bio"
                                     class="
                                         w-full
@@ -47,6 +49,34 @@
                                         focus:ring-blue-600
                                     "
                                 ></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <div class="flex flex-row mb-2">
+                                  <label class="font-bold mr-2">Apodos</label>
+                                  <Button type="button" class="rounded-full px-1 py-1"
+                                    @click="showModal">
+                                    <i class="fas fa-plus"></i>
+                                  </Button>
+                                </div>
+
+                                <div class="
+                                  grid
+                                  grid-cols-[repeat(2,_auto_1fr)]
+                                  lg:grid-cols-[repeat(3,_auto_1fr)]
+                                  gap-2 grid-flow-row-dense
+                                  ">
+
+                                  <template v-for="apodo of persona.apodos" :key="apodo.id">
+                                    <div>
+                                      <Button type="button" class="rounded-full px-1 py-1 ml-1"
+                                        @click="doConfirmApodoDeleteVisible(apodo.id, apodo.apodo)">
+                                        <i class="fas fa-times"></i>
+                                      </Button>
+                                    </div>
+                                    <p class="break-all">{{ apodo.apodo }}</p>
+                                  </template>
+
+                                </div>
                             </div>
                             <!-- submit -->
                             <div class="flex items-center mt-4">
@@ -67,14 +97,39 @@
                 </div>
             </div>
         </div>
+        <ModalCreate
+          v-show="isShowModal"
+          modal-title="Crear un Apodo"
+          id-input="apodo"
+          placeholder-input="Insertar un apodo..."
+          @confirm-event="confirmCreateApodo"
+          @close-event="cancelCreateApodo"
+        />
+        <modal-confirm
+          v-show="isConfirmApodoDeleteVisible"
+          :modal-title="`¿Borrar a ${confirmApodoDeleteName}?`"
+          confirm-message="¿Esta seguro de borrar a el apodo?"
+          @confirm-event="confirmApodoDelete"
+          @close-event="cancelApodoDelete"
+        />
     </BreezeAuthenticatedLayout>
 </template>
 
+<!-- <style>
+  .xgrid-cols-4 {
+    grid-template-columns: repeat(2, auto 1fr);
+  }
+</style> -->
+
 <script setup>
-import { toRefs } from "vue";
-import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
-import { Head } from "@inertiajs/inertia-vue3";
-import { useForm } from "@inertiajs/inertia-vue3";
+import { toRefs } from "vue"
+import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue"
+import { Head } from "@inertiajs/inertia-vue3"
+import { useForm } from "@inertiajs/inertia-vue3"
+import Button from "@/Components/Button.vue"
+import ModalCreate from "@/Components/ModalCreate.vue"
+import ModalConfirm from "@/Components/ModalConfirm.vue"
+import { createComps, destroyComps } from "@/Composables/generic"
 
 const props = defineProps({
   persona: Object
@@ -87,7 +142,33 @@ const form = useForm({
 });
 
 const submit = () => {
-  form.put(route("personas.update", persona.value.id));
+  form.put(route("personas.update", persona.value.id))
 }
+
+// const removeApodo = (id) => {
+//   Inertia.delete(route('personas.removeApodo', [id]), {
+//     preserveScroll: true,
+//     preserveState: true
+//   })
+// }
+
+const {
+  isShowModal,
+  showModal,
+  cancelAction: cancelCreateApodo,
+  createAction: confirmCreateApodo
+} = createComps({
+  routeStr: 'personas.createApodo',
+  idRel: persona.value.id,
+  nameValue: 'apodo'
+})
+
+const {
+  isShowConfirm: isConfirmApodoDeleteVisible,
+  entityStr: confirmApodoDeleteName,
+  showConfirm: doConfirmApodoDeleteVisible,
+  cancelAction: cancelApodoDelete,
+  deleteAction: confirmApodoDelete
+} = destroyComps('personas.removeApodo')
 
 </script>

@@ -39,7 +39,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::resource('grupos', GruposController::class);
+
     Route::resource('personas', PersonasController::class);
+    Route::post('personas/{persona}/create-apodo', [PersonasController::class, 'createApodo'])
+        ->name('personas.createApodo');
+    Route::delete('personas/remove-apodo/{apodo}', [PersonasController::class, 'removeApodo'])
+        ->name('personas.removeApodo');
+
+
     Route::resource('medios', MediosController::class);
     Route::resource('etiquetas', EtiquetasController::class);
     Route::resource('categorias', CategoriasController::class);

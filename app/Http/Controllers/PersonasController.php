@@ -6,6 +6,7 @@ use App\Http\Controllers\Traits\PaginateTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Persona;
+use App\Models\Apodo;
 use Log;
 
 class PersonasController extends Controller
@@ -102,7 +103,8 @@ class PersonasController extends Controller
             'persona' => [
                 'id' => $persona->id,
                 'nombre' => $persona->nombre,
-                'bio' => $persona->bio
+                'bio' => $persona->bio,
+                'apodos' => $persona->apodos
             ]
         ]);
     }
@@ -137,5 +139,37 @@ class PersonasController extends Controller
         $page = $this->getPage($persona->id);
         $persona->delete();
         return $this->redirectWithPage($page);
+    }
+
+    /**
+     * Create a apodo to the specified resource
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param \App\Models\Persona   $persona
+     * @return \Illuminate\Http\Response
+     */
+    public function createApodo(Request $request, Persona $persona)
+    {
+        $data = $request->validate([
+            'apodo' => ['required', 'max:255'],
+        ]);
+
+        $persona->apodos()->create($data);
+
+        return redirect()->back();
+    }
+
+    /**
+     * Remove a apodo to the specified resource
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param \App\Models\Apodo     $apodo
+     * @return \Illuminate\Http\Response
+     */
+    public function removeApodo(Request $request, Apodo $apodo)
+    {
+        $apodo->delete();
+
+        return redirect()->back();
     }
 }
