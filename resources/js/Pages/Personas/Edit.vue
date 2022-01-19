@@ -115,12 +115,6 @@
     </BreezeAuthenticatedLayout>
 </template>
 
-<!-- <style>
-  .xgrid-cols-4 {
-    grid-template-columns: repeat(2, auto 1fr);
-  }
-</style> -->
-
 <script setup>
 import { toRefs } from "vue"
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue"

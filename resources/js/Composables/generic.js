@@ -71,3 +71,43 @@ export function createComps ({
   }
 }
 
+export function createMemoryComps ({
+  nameValue = ''
+}) {
+  const isShowModal = ref(false)
+  const entities = ref([])
+
+  const showModal = () => {
+    isShowModal.value = true
+  }
+
+  const cancelAction = () => {
+    isShowModal.value = false
+  }
+
+  const createAction = (value) => {
+    entities.value.push({
+      [nameValue]: value
+    })
+
+    isShowModal.value = false
+  }
+
+  return {
+    isShowModal,
+    showModal,
+    entities,
+    cancelAction,
+    createAction
+  }
+}
+
+export function destroyMemoryComps (entities) {
+  const deleteAction = (index) => {
+    entities.value.splice(index, 1)
+  }
+
+  return {
+    deleteAction
+  }
+}

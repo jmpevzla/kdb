@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Persona;
 use App\Models\Apodo;
+use Exception;
 use Log;
+use Illuminate\Support\Facades\DB;
+use stdClass;
 
 class PersonasController extends Controller
 {
@@ -71,9 +74,15 @@ class PersonasController extends Controller
         $req = $request->validate([
             'nombre' => ['required', 'max:255'],
             'bio' => ['max:255'],
+            'apodos' => ['array']
         ]);
 
-        $persona = Persona::create($req);
+        $persona = new stdClass;
+
+        DB::transaction(function() use ($req, &$persona) {
+            $persona = Persona::create($req);
+            $persona->apodos()->createMany($req['apodos']);
+        });
 
         return $this->redirectSearchPage($persona->id);
     }
