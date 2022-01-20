@@ -139,13 +139,6 @@ const submit = () => {
   form.put(route("personas.update", persona.value.id))
 }
 
-// const removeApodo = (id) => {
-//   Inertia.delete(route('personas.removeApodo', [id]), {
-//     preserveScroll: true,
-//     preserveState: true
-//   })
-// }
-
 const {
   isShowModal,
   showModal,
@@ -153,8 +146,7 @@ const {
   createAction: confirmCreateApodo
 } = createComps({
   routeStr: 'personas.createApodo',
-  idRel: persona.value.id,
-  nameValue: 'apodo'
+  idRel: persona.value.id
 })
 
 const {

@@ -55,7 +55,7 @@
                     <input
                         :id="idInput"
                         type="text"
-                        v-model="data"
+                        :name="idInput"
                         :placeholder="placeholderInput"
                         class="
                             w-full
@@ -115,7 +115,7 @@
 </template>
 
 <script setup>
-import { toRefs, ref } from 'vue'
+import { toRefs } from 'vue'
 
 const props = defineProps({
   modalTitle: {
@@ -135,16 +135,16 @@ const { modalTitle, idInput, placeholderInput } = toRefs(props)
 
 const emit = defineEmits(['closeEvent', 'confirmEvent'])
 
-const data = ref('')
+const input = document.getElementById(idInput.value)
 
 const closeModal = () => {
-  data.value = ''
+  input.value = ''
   emit("closeEvent")
 }
 
-const handleSubmit = () => {
-  emit("confirmEvent", data.value)
-  data.value = ''
+const handleSubmit = (event) => {
+  emit("confirmEvent", event)
+  //input.value = ''
 }
 
 </script>

@@ -34,12 +34,9 @@ export function destroyComps (routeStr) {
 
 export function createComps ({
   routeStr = '',
-  nameValue = '',
   idRel = 0
 }) {
   const isShowModal = ref(false)
-  // const entityStr = ref('')
-  // let _id = -1
 
   const showModal = () => {
     isShowModal.value = true
@@ -49,17 +46,15 @@ export function createComps ({
     isShowModal.value = false
   }
 
-  const createAction = (value) => {
-    // Inertia.delete(route(routeStr, _id), {
-    //   preserveScroll: true
-    // });
-    Inertia.post(route(routeStr, idRel), {
-      [nameValue]: value
-    } , {
+  const createAction = (event) => {
+
+    const data = new FormData(event.target)
+
+    Inertia.post(route(routeStr, idRel), data, {
       preserveScroll: true,
       preserveState: true
     })
-    //console.log({ [nameValue]: value, ...addData })
+
     isShowModal.value = false
   }
 
@@ -71,9 +66,7 @@ export function createComps ({
   }
 }
 
-export function createMemoryComps ({
-  nameValue = ''
-}) {
+export function createMemoryComps () {
   const isShowModal = ref(false)
   const entities = ref([])
 
@@ -85,11 +78,25 @@ export function createMemoryComps ({
     isShowModal.value = false
   }
 
-  const createAction = (value) => {
-    entities.value.push({
-      [nameValue]: value
+  function removeDuplicate(entities, value, key) {
+    const ents = entities
+    const index = ents.findIndex((ent) => ent[key].toLowerCase() === value.toLowerCase())
+    if (index >= 0) {
+      ents.splice(index, 1)
+    }
+  }
+
+  const createAction = (event) => {
+
+    const data = new FormData(event.target)
+
+    const obj = {}
+    data.forEach((value, key) => {
+      removeDuplicate(entities.value, value, key)
+      obj[key] = value
     })
 
+    entities.value.push(obj)
     isShowModal.value = false
   }
 

@@ -128,12 +128,10 @@ const submit = () => {
 const {
   isShowModal: isCreateApodoVisible,
   showModal: createApodoVisible,
+  entities: apodos,
   cancelAction: cancelCreateApodo,
-  createAction: confirmCreateApodo,
-  entities: apodos
-} = createMemoryComps({
-  nameValue: 'apodo'
-})
+  createAction: confirmCreateApodo
+} = createMemoryComps()
 
 const {
   deleteAction: apodoDelete
