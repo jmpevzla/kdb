@@ -57,6 +57,7 @@
                         type="text"
                         :name="idInput"
                         :placeholder="placeholderInput"
+                        required
                         class="
                             w-full
                             px-4
@@ -135,16 +136,16 @@ const { modalTitle, idInput, placeholderInput } = toRefs(props)
 
 const emit = defineEmits(['closeEvent', 'confirmEvent'])
 
-const input = document.getElementById(idInput.value)
+const clearInput = () => document.getElementById(idInput.value).value = ''
 
 const closeModal = () => {
-  input.value = ''
+  clearInput()
   emit("closeEvent")
 }
 
 const handleSubmit = (event) => {
   emit("confirmEvent", event)
-  //input.value = ''
+  clearInput()
 }
 
 </script>

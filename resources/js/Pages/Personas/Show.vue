@@ -47,7 +47,7 @@
                     Apodos:
                   </p>
                   <p class="table-cell text-center break-words w-64 px-4 pb-4">
-                    ---
+                    {{ apodos }}
                   </p>
                 </div>
                 <div class="table-row">
@@ -103,6 +103,12 @@ const props = defineProps({
   persona: Object
 })
 const { persona } = toRefs(props)
+
+const apodos = computed(() => {
+  return persona.value.apodos.map((apodo) => {
+    return apodo.apodo
+  }).join(', ')
+})
 
 const created_at = computed(() => {
   return formatDatetime(persona.value.created_at)

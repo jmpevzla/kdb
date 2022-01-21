@@ -96,7 +96,7 @@
             </div>
         </div>
         <ModalCreate
-          v-show="isCreateApodoVisible"
+          v-if="isCreateApodoVisible"
           modal-title="Crear un Apodo"
           id-input="apodo"
           placeholder-input="Insertar un apodo..."
