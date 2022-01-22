@@ -167,7 +167,8 @@ import { beforeModalCreateLink, removeLinkDuplicate } from '@/Composables/utils/
 
 const props = defineProps({
   tiposLinks: {
-    type: Array
+    type: Array,
+    default: []
   }
 })
 

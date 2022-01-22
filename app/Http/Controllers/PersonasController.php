@@ -27,20 +27,6 @@ class PersonasController extends Controller
     /***/
 
     /**
-     * Get Tipos de Links
-     * @param \Illuminate\Http\Request  $request
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
-     */
-    private function getLinks(Request $request)
-    {
-        if ($request->has('tipos-links')) {
-            $tiposLinks = TiposLink::orderBy('descripcion')->get(['id', 'descripcion']);
-            return $tiposLinks;
-        }
-        return [];
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -71,14 +57,15 @@ class PersonasController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     * @param \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
-        $tiposLinks = $this->getLinks($request);
         return Inertia::render('Personas/Create', [
-            'tiposLinks' => $tiposLinks
+            'tiposLinks' => Inertia::lazy(function() {
+                return TiposLink::getDescriptions();
+            })
         ]);
     }
 
