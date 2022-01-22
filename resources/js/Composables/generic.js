@@ -66,11 +66,15 @@ export function createComps ({
   }
 }
 
-export function createMemoryComps () {
+export function createMemoryComps ({
+  beforeShowModal,
+  removeDuplicateCustom
+} = {}) {
   const isShowModal = ref(false)
   const entities = ref([])
 
   const showModal = () => {
+    beforeShowModal ? beforeShowModal() : ''
     isShowModal.value = true
   }
 
@@ -91,12 +95,14 @@ export function createMemoryComps () {
     const data = new FormData(event.target)
 
     const obj = {}
+    removeDuplicateCustom ? removeDuplicateCustom(entities.value, data) : ''
     data.forEach((value, key) => {
-      removeDuplicate(entities.value, value, key)
+      !removeDuplicateCustom ? removeDuplicate(entities.value, value, key) : ''
       obj[key] = value
     })
 
     entities.value.push(obj)
+
     isShowModal.value = false
   }
 

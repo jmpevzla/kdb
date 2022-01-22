@@ -76,6 +76,48 @@
 
                               </div>
                             </div>
+                            <div class="mb-2">
+                              <div class="flex flex-row mb-2">
+                                <label class="font-bold mr-2">Links</label>
+                                <Button type="button" class="rounded-full px-1 py-1"
+                                  @click="createLinkVisible">
+                                  <i class="fas fa-plus"></i>
+                                </Button>
+                              </div>
+
+                              <div class="
+                                  grid
+                                  grid-cols-[auto,_1fr]
+                                  items-center
+                                  gap-2
+                                  grid-flow-row-dense
+                                ">
+
+                                <template v-for="(link, index) of links" :key="index">
+                                  <div>
+                                    <Button type="button" class="rounded-full px-1 py-1 ml-1"
+                                      @click="linkDelete(index)">
+                                      <i class="fas fa-times"></i>
+                                    </Button>
+                                  </div>
+                                  <div>
+                                    <p class="
+                                      text-ellipsis w-80 overflow-hidden whitespace-nowrap
+                                    ">{{ link.descripcion }}
+                                    </p>
+                                    <a class="
+                                      block text-ellipsis w-80 overflow-hidden whitespace-nowrap
+                                      text-blue-600 hover:text-black
+                                      "
+                                      :href="link.link"
+                                      rel="noopener noreferrer"
+                                      target="_blank">{{ link.link }}
+                                    </a>
+                                  </div>
+                                </template>
+
+                              </div>
+                            </div>
                             <!-- submit -->
                             <div class="flex items-center mt-4">
                                 <button
@@ -103,27 +145,40 @@
           @confirm-event="confirmCreateApodo"
           @close-event="cancelCreateApodo"
         />
+        <ModalCreateLink
+          v-if="isCreateLinkVisible"
+          :tipos-links="tiposLinks"
+          @confirm-event="confirmCreateLink"
+          @close-event="cancelCreateLink"
+        />
     </BreezeAuthenticatedLayout>
 </template>
 
 <script setup>
+import { toRefs } from "vue";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import { useForm } from "@inertiajs/inertia-vue3";
 import ModalCreate from "@/Components/ModalCreate.vue";
 import Button from "@/Components/Button.vue"
 import { createMemoryComps, destroyMemoryComps } from "@/Composables/generic";
+import ModalCreateLink from '@/Components/Modals/CreateLink.vue'
+import { beforeModalCreateLink, removeLinkDuplicate } from '@/Composables/utils/links'
+
+const props = defineProps({
+  tiposLinks: {
+    type: Array
+  }
+})
+
+const { tiposLinks } = toRefs(props)
 
 const form = useForm({
   nombre: null,
   bio: null,
-  apodos: []
+  apodos: [],
+  links: []
 });
-
-const submit = () => {
-  form.apodos = apodos.value
-  form.post(route("personas.store"))
-}
 
 const {
   isShowModal: isCreateApodoVisible,
@@ -136,5 +191,26 @@ const {
 const {
   deleteAction: apodoDelete
 } = destroyMemoryComps(apodos)
+
+const {
+  isShowModal: isCreateLinkVisible,
+  showModal: createLinkVisible,
+  entities: links,
+  cancelAction: cancelCreateLink,
+  createAction: confirmCreateLink
+} = createMemoryComps({
+  beforeShowModal: beforeModalCreateLink,
+  removeDuplicateCustom: removeLinkDuplicate
+})
+
+const {
+  deleteAction: linkDelete
+} = destroyMemoryComps(links)
+
+const submit = () => {
+  form.apodos = apodos.value
+  form.links = links.value
+  form.post(route("personas.store"))
+}
 
 </script>

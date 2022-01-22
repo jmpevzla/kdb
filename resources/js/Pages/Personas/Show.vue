@@ -42,13 +42,39 @@
                     {{ persona.bio }}
                   </p>
                 </div>
-                <div class="table-row">
+                <div v-if="apodos" class="table-row">
                   <p class="table-cell font-bold text-right pb-4">
                     Apodos:
                   </p>
                   <p class="table-cell text-center break-words w-64 px-4 pb-4">
                     {{ apodos }}
                   </p>
+                </div>
+                <div v-if="links.length > 0" class="table-row">
+                  <p class="table-cell font-bold text-right pb-4">
+                    Links:
+                  </p>
+                  <div class="table-cell">
+                    <template v-for="link of links" :key="link.id">
+                      <p class="
+                        text-center text-ellipsis overflow-hidden
+                        whitespace-nowrap break-words w-64 ml-2
+                        ">
+                        {{ link.descripcion }}
+                      </p>
+                      <a class="
+                          block text-center text-ellipsis
+                          overflow-hidden whitespace-nowrap break-words
+                          w-64 border-b mb-2 border-gray-500 text-blue-600
+                          ml-2
+                          "
+                          :href="link.href"
+                          rel="noopener noreferrer"
+                          target="_blank">
+                        {{ link.link }}
+                      </a>
+                    </template>
+                  </div>
                 </div>
                 <div class="table-row">
                   <p class="table-cell font-bold text-right pb-4">
@@ -108,6 +134,17 @@ const apodos = computed(() => {
   return persona.value.apodos.map((apodo) => {
     return apodo.apodo
   }).join(', ')
+})
+
+const links = computed(() => {
+  return persona.value.links.map((link) => {
+    return {
+      id: link.id,
+      descripcion: link.descripcion,
+      link: link.link,
+      href: '//' + link.link
+    }
+  })
 })
 
 const created_at = computed(() => {

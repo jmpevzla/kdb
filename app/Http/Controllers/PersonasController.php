@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Persona;
 use App\Models\Apodo;
+use App\Models\TiposLink;
 use Exception;
 use Log;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +24,20 @@ class PersonasController extends Controller
     private $model = Persona::class;
     private $routeIndex = 'personas.index';
     /***/
+
+    /**
+     * Get Tipos de Links
+     * @param \Illuminate\Http\Request  $request
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    private function getLinks(Request $request)
+    {
+        if ($request->has('tipos-links')) {
+            $tiposLinks = TiposLink::orderBy('descripcion')->get(['id', 'descripcion']);
+            return $tiposLinks;
+        }
+        return [];
+    }
 
     /**
      * Display a listing of the resource.
@@ -55,12 +70,15 @@ class PersonasController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
+     * @param \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return Inertia::render('Personas/Create');
+        $tiposLinks = $this->getLinks($request);
+        return Inertia::render('Personas/Create', [
+            'tiposLinks' => $tiposLinks
+        ]);
     }
 
     /**
@@ -74,7 +92,8 @@ class PersonasController extends Controller
         $req = $request->validate([
             'nombre' => ['required', 'max:255'],
             'bio' => ['max:255'],
-            'apodos' => ['array']
+            'apodos' => ['array'],
+            'links' => ['array']
         ]);
 
         $persona = new stdClass;
@@ -82,6 +101,7 @@ class PersonasController extends Controller
         DB::transaction(function() use ($req, &$persona) {
             $persona = Persona::create($req);
             $persona->apodos()->createMany($req['apodos']);
+            $persona->links()->createMany($req['links']);
         });
 
         return $this->redirectSearchPage($persona->id);
