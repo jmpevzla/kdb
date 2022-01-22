@@ -34,11 +34,13 @@ export function destroyComps (routeStr) {
 
 export function createComps ({
   routeStr = '',
-  idRel = 0
+  idRel = 0,
+  beforeShowModal
 }) {
   const isShowModal = ref(false)
 
   const showModal = () => {
+    beforeShowModal ? beforeShowModal() : ''
     isShowModal.value = true
   }
 
@@ -121,6 +123,40 @@ export function destroyMemoryComps (entities) {
   }
 
   return {
+    deleteAction
+  }
+}
+
+export function destroyRelComps ({
+  routeStr = '',
+  idRel = 0
+}) {
+  const isShowConfirm = ref(false)
+  const entityStr = ref('')
+  let _id = -1
+
+  const showConfirm = (id, str = 'entidad') => {
+    isShowConfirm.value = true
+    entityStr.value = str
+    _id = id
+  }
+
+  const cancelAction = () => {
+    isShowConfirm.value = false
+  }
+
+  const deleteAction = () => {
+    Inertia.delete(route(routeStr, [idRel, _id]), {
+      preserveScroll: true
+    });
+    isShowConfirm.value = false
+  }
+
+  return {
+    isShowConfirm,
+    entityStr,
+    showConfirm,
+    cancelAction,
     deleteAction
   }
 }

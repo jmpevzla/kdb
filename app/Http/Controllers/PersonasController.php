@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\PaginateTrait;
+use App\Http\Requests\LinksPostRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Persona;
@@ -123,6 +124,7 @@ class PersonasController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Persona  $persona
      * @return \Illuminate\Http\Response
      */
@@ -133,8 +135,12 @@ class PersonasController extends Controller
                 'id' => $persona->id,
                 'nombre' => $persona->nombre,
                 'bio' => $persona->bio,
-                'apodos' => $persona->apodos
-            ]
+                'apodos' => $persona->apodos,
+                'links' => $persona->links
+            ],
+            'tiposLinks' => Inertia::lazy(function() {
+                return TiposLink::getDescriptions();
+            })
         ]);
     }
 
@@ -183,7 +189,9 @@ class PersonasController extends Controller
             'apodo' => ['required', 'max:255'],
         ]);
 
-        $persona->apodos()->create($data);
+        DB::transaction(function() use ($persona, $data) {
+            $persona->apodos()->create($data);
+        });
 
         return redirect()->back();
     }
@@ -198,6 +206,36 @@ class PersonasController extends Controller
     public function removeApodo(Request $request, Apodo $apodo)
     {
         $apodo->delete();
+
+        return redirect()->back();
+    }
+
+    /**
+     * Create a link to the specified resource
+     *
+     * @param  \App\Http\Requests\LinksPostRequest  $linkPostRequest
+     * @param \App\Models\Persona   $persona
+     * @return \Illuminate\Http\Response
+     */
+    public function createLink(LinksPostRequest $linkPostRequest, Persona $persona)
+    {
+        $data = $linkPostRequest->validated();
+        DB::transaction(function() use ($persona, $data) {
+            $persona->links()->create($data);
+        });
+        return redirect()->back();
+    }
+
+    /**
+     * Remove a link to the specified resource
+     *
+     * @param \App\Models\Persona $persona
+     * @param int $idLink
+     * @return \Illuminate\Http\Response
+     */
+    public function removeLink(Persona $persona, int $idLink)
+    {
+        $persona->links()->detach($idLink);
 
         return redirect()->back();
     }

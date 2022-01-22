@@ -21,4 +21,8 @@ class TiposLink extends Model
     protected $fillable = [
         'descripcion',
     ];
+
+    public static function getDescriptions() {
+        return self::orderBy('descripcion')->get(['id', 'descripcion']);
+    }
 }

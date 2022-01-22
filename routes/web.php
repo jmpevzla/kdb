@@ -45,7 +45,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('personas.createApodo');
     Route::delete('personas/remove-apodo/{apodo}', [PersonasController::class, 'removeApodo'])
         ->name('personas.removeApodo');
-
+    Route::post('personas/{persona}/create-link', [PersonasController::class, 'createLink'])
+        ->name('personas.createLink');
+    Route::delete('personas/{persona}/remove-link/{idLink}', [PersonasController::class, 'removeLink'])
+        ->name('personas.removeLink');
 
     Route::resource('medios', MediosController::class);
     Route::resource('etiquetas', EtiquetasController::class);

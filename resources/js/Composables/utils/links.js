@@ -2,9 +2,9 @@ import { Inertia } from "@inertiajs/inertia";
 
 export const beforeModalCreateLink = () => {
   Inertia.reload({
-    data: {
-      'tipos-links': 1
-    },
+    // data: {
+    //   'tipos-links': 1
+    // },
     only: ['tiposLinks']
   })
 }
