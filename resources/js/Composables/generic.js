@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { Inertia } from "@inertiajs/inertia"
 
 export function destroyComps (routeStr) {
@@ -104,6 +104,7 @@ export function createMemoryComps ({
     })
 
     entities.value.push(obj)
+    //entities.value = [...entities.value, obj]
 
     isShowModal.value = false
   }
@@ -123,6 +124,36 @@ export function destroyMemoryComps (entities) {
   }
 
   return {
+    deleteAction
+  }
+}
+
+export function memory2ListsComps (listOne, listTwo) {
+
+  const allList = ref([])
+
+  const updateList = () => {
+    allList.value = [...listOne.value, ...listTwo.value]
+  }
+
+  watch(listOne, updateList, { deep: true })
+  watch(listTwo, updateList, { deep: true })
+
+  const deleteAction = (value) => {
+    const lone = listOne.value
+    const ltwo = listTwo.value
+
+    let index = lone.indexOf(value)
+    if (index >= 0)
+      return listOne.value.splice(index, 1)
+
+    index = ltwo.indexOf(value)
+    if (index >= 0)
+      return listTwo.value.splice(index, 1)
+  }
+
+  return {
+    allList,
     deleteAction
   }
 }

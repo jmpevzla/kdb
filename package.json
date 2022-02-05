@@ -29,6 +29,7 @@
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.15.4",
         "dompurify": "^2.3.4",
-        "marked": "^4.0.9"
+        "marked": "^4.0.9",
+        "vue-multiselect": "^3.0.0-alpha.2"
     }
 }

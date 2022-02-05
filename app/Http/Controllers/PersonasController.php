@@ -9,6 +9,8 @@ use Inertia\Inertia;
 use App\Models\Persona;
 use App\Models\Apodo;
 use App\Models\TiposLink;
+use App\Models\Link;
+use Illuminate\Validation\Rule;
 use Exception;
 use Log;
 use Illuminate\Support\Facades\DB;
@@ -55,17 +57,35 @@ class PersonasController extends Controller
         ]);
     }
 
+     /**
+     * Get input request service
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param string $key
+     * @param $default
+     * @return mixed
+     */
+    private function getInput(Request $request, string $key, $default = null)
+    {
+        $data = $request->input($key, $default);
+        return $data == null ? $default : $data;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $searchLink = $this->getInput($request, 'searchLink', '');
+
         return Inertia::render('Personas/Create', [
             'tiposLinks' => Inertia::lazy(function() {
                 return TiposLink::getDescriptions();
-            })
+            }),
+            'links' => Link::getLinks($searchLink)
         ]);
     }
 
@@ -89,7 +109,8 @@ class PersonasController extends Controller
         DB::transaction(function() use ($req, &$persona) {
             $persona = Persona::create($req);
             $persona->apodos()->createMany($req['apodos']);
-            $persona->links()->createMany($req['links']);
+            $persona->links()->attach($req['links']['selLinks']);
+            $persona->links()->createMany($req['links']['createLinks']);
         });
 
         return $this->redirectSearchPage($persona->id);

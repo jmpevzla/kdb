@@ -31,4 +31,21 @@ class Link extends Model
     public function tiposLink() {
         return $this->hasOne(TiposLink::class, 'id', 'tipo-link_id');
     }
+
+    /**
+     * Get Links for search select
+     *
+     * @param string $search
+     * @param int $limit
+     * @return \Illuminate\Support\Collection
+     */
+    public static function getLinks(string $search, int $limit = 30)
+    {
+        return self::select(['id', 'descripcion', 'link'])
+            ->where('descripcion', 'LIKE', '%' . $search . '%')
+            ->orWhere('link', 'LIKE', '%' . $search . '%')
+            ->orderBy('descripcion')
+            ->take($limit)
+            ->get();
+    }
 }
