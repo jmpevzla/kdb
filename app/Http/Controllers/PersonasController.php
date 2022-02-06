@@ -136,8 +136,10 @@ class PersonasController extends Controller
      * @param  \App\Models\Persona  $persona
      * @return \Illuminate\Http\Response
      */
-    public function edit(Persona $persona)
+    public function edit(Request $request, Persona $persona)
     {
+        $searchLink = $this->getInput($request, 'searchLink', '');
+
         return Inertia::render('Personas/Edit', [
             'persona' => [
                 'id' => $persona->id,
@@ -148,7 +150,8 @@ class PersonasController extends Controller
             ],
             'tiposLinks' => Inertia::lazy(function() {
                 return TiposLink::getDescriptions();
-            })
+            }),
+            'links' => Link::getLinks($searchLink)
         ]);
     }
 
@@ -244,6 +247,26 @@ class PersonasController extends Controller
     public function removeLink(Persona $persona, int $idLink)
     {
         $persona->links()->detach($idLink);
+
+        return redirect()->back();
+    }
+
+    /**
+     * Attach a link to the specified resource
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @param \App\Models\Persona $persona
+     * @return \Illuminate\Http\Response
+     */
+    public function attachLink(Request $request, Persona $persona)
+    {
+        $req = $request->validate([
+            'id' => ['required', 'integer', 'gt:0'],
+        ]);
+
+        $idLink = $req['id'];
+
+        $persona->links()->attach($idLink);
 
         return redirect()->back();
     }

@@ -49,6 +49,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('personas.createLink');
     Route::delete('personas/{persona}/remove-link/{idLink}', [PersonasController::class, 'removeLink'])
         ->name('personas.removeLink');
+    Route::post('personas/{persona}/attach-link', [PersonasController::class, 'attachLink'])
+        ->name('personas.attachLink');
 
     Route::resource('medios', MediosController::class);
     Route::resource('etiquetas', EtiquetasController::class);

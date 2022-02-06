@@ -85,29 +85,12 @@
                                 </Button>
                               </div>
 
-                              <div>
-                                <!-- <multiselect v-model="value" deselect-label="Can't remove this value" track-by="name" :custom-label="({ name, language }) => `${language} <br> ${name}`" placeholder="Select one" :options="options" :searchable="false" :allow-empty="false">
-                                  <template v-slot:singleLabel="{ option }" ><strong>{{ option.name }}</strong> is written in <strong>  {{ option.language }}</strong></template>
-                                  <template v-slot:option="{ option }">
-                                    <div class="option__desc"><span class="option__title">{{ option.name }}</span><span class="option__small">{{ option.language }}</span></div>
-                                  </template>
-                                </multiselect> -->
-                                <multiselect v-model="selLinks" track-by="id" placeholder="Buscar Links..."
-                                  :options="dbLinks" :close-on-select="false" :multiple="true"
-                                  label="descripcion" :hide-selected="true" :internal-search="false"
-                                  :show-no-results="false" :loading="isLoadingLinks" :clear-on-select="false"
-                                  @search-change="onSearchLinks" :option-height="80">
-                                  <!-- <template v-slot:singleLabel="{ option }" ><strong>{{ option.name }}</strong> is written in <strong>  {{ option.language }}</strong></template> -->
-                                  <template v-slot:option="{ option }">
-                                    <div class="border-2 w-[25rem] overflow-hidden whitespace-nowrap">
-
-                                      <p class="mb-2 text-base font-bold">{{ option.descripcion }}</p>
-                                      <p class="text-blue-700">{{ option.link }}</p>
-                                    </div>
-                                  </template>
-                                  <template v-slot:selection="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length && !isOpen">{{ values.length }} links seleccionados</span></template>
-                                  <template v-slot:tag><span></span></template>
-                                </multiselect>
+                              <div class="mb-2">
+                                <LinkMultiSelect
+                                  :modelFn="getSelLinks"
+                                  :options="dbLinks"
+                                  @search="onSearchLinks"
+                                />
                               </div>
 
                               <div class="
@@ -179,21 +162,18 @@
     </BreezeAuthenticatedLayout>
 </template>
 
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>
-
 <script setup>
-import { toRefs, ref, onMounted } from "vue"
-import Multiselect from "vue-multiselect"
+import { toRefs, ref } from "vue"
+import { Head, useForm } from "@inertiajs/inertia-vue3"
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue"
-import { Head } from "@inertiajs/inertia-vue3"
-import { useForm } from "@inertiajs/inertia-vue3"
 import ModalCreate from "@/Components/ModalCreate.vue"
 import Button from "@/Components/Button.vue"
 import { createMemoryComps, destroyMemoryComps,
   memory2ListsComps } from "@/Composables/generic";
 import ModalCreateLink from '@/Components/Modals/CreateLink.vue'
 import { beforeModalCreateLink, removeLinkDuplicate } from '@/Composables/utils/links'
-import { Inertia } from "@inertiajs/inertia"
+import LinkMultiSelect from "@/Components/LinkMultiSelect.vue"
+import { onSearchLinks } from '@/Utils/links'
 
 const props = defineProps({
   tiposLinks: {
@@ -218,8 +198,8 @@ const form = useForm({
   }
 });
 
-const isLoadingLinks = ref(false)
 const selLinks = ref([])
+const getSelLinks = () => selLinks
 
 const {
   isShowModal: isCreateApodoVisible,
@@ -243,21 +223,6 @@ const {
   beforeShowModal: beforeModalCreateLink,
   removeDuplicateCustom: removeLinkDuplicate
 })
-
-const onSearchLinks = (query) => {
-  Inertia.reload({
-    data: {
-      searchLink: query
-    },
-    only: ['links'],
-    onBefore: () => {
-      isLoadingLinks.value = true
-    },
-    onFinish: () => {
-      isLoadingLinks.value = false
-    }
-  })
-}
 
 const {
   allList: allLinks,

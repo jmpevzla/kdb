@@ -26,3 +26,4 @@ export const removeLinkDuplicate = (entities, data) => {
     entities.splice(index, 1)
   }
 }
+

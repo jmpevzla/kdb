@@ -87,6 +87,15 @@
                                 </Button>
                               </div>
 
+                              <div class="mb-2">
+                                <LinkMultiSelect
+                                  :modelFn="getSelLinks"
+                                  :options="links"
+                                  @search="onSearchLinks"
+                                  @select="onSelectLink"
+                                />
+                              </div>
+
                               <div class="
                                   grid
                                   grid-cols-[auto,_1fr]
@@ -171,7 +180,8 @@
 </template>
 
 <script setup>
-import { toRefs } from "vue"
+import { toRefs, ref, watch } from "vue"
+import LinkMultiSelect from "@/Components/LinkMultiSelect.vue"
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue"
 import { Head } from "@inertiajs/inertia-vue3"
 import { useForm } from "@inertiajs/inertia-vue3"
@@ -179,17 +189,27 @@ import Button from "@/Components/Button.vue"
 import ModalCreate from "@/Components/ModalCreate.vue"
 import ModalConfirm from "@/Components/ModalConfirm.vue"
 import ModalCreateLink from "@/Components/Modals/CreateLink.vue"
-import { createComps, destroyComps, destroyRelComps } from "@/Composables/generic"
+import { createComps, destroyComps,
+  destroyRelComps, selLinksPropWatch } from "@/Composables/generic"
 import { beforeModalCreateLink } from "@/Composables/utils/links"
+import { onSearchLinks, selectLinkFn } from "@/Utils/links"
 
 const props = defineProps({
   persona: Object,
   tiposLinks: {
     type: Array,
     default: []
+  },
+  links: {
+    type: Array,
+    default: []
   }
 })
-const { persona, tiposLinks } = toRefs(props)
+const { persona, tiposLinks, links } = toRefs(props)
+
+const {
+  getSelLinks
+} = selLinksPropWatch(() => persona.value.links, persona)
 
 const form = useForm({
     nombre: persona.value.nombre,
@@ -228,6 +248,8 @@ const {
   idRel: persona.value.id,
   beforeShowModal: beforeModalCreateLink
 })
+
+const onSelectLink = selectLinkFn('personas.attachLink', persona.value.id)
 
 const {
   isShowConfirm: isConfLinkRelDeleteVisible,

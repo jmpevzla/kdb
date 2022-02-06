@@ -191,3 +191,16 @@ export function destroyRelComps ({
     deleteAction
   }
 }
+
+export function selLinksPropWatch(propLinksFn, watchProp) {
+  const selLinks = ref([...propLinksFn()])
+  const getSelLinks = () => selLinks
+
+  watch(watchProp, () => {
+    selLinks.value = [...propLinksFn()]
+  }, { deep: true })
+
+  return {
+    getSelLinks
+  }
+}
