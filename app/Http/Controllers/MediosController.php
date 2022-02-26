@@ -108,6 +108,7 @@ class MediosController extends Controller
      */
     public function show(Medio $medio)
     {
+        $medio->load(['links:id,descripcion,link']);
         return Inertia::render('Medios/Show', [
             'medio' => $medio
         ]);
