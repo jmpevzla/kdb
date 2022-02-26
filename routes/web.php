@@ -53,6 +53,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('personas.attachLink');
 
     Route::resource('medios', MediosController::class);
+    Route::post('medios/{medio}/create-link', [MediosController::class, 'createLink'])
+        ->name('medios.createLink');
+    Route::delete('medios/{medio}/remove-link/{idLink}', [MediosController::class, 'removeLink'])
+        ->name('medios.removeLink');
+    Route::post('medios/{medio}/attach-link', [MediosController::class, 'attachLink'])
+        ->name('medios.attachLink');
+
     Route::resource('etiquetas', EtiquetasController::class);
     Route::resource('categorias', CategoriasController::class);
     Route::resource('tipos', TiposController::class);

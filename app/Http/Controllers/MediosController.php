@@ -9,6 +9,7 @@ use App\Models\Medio;
 use App\Models\TiposLink;
 use App\Models\Link;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\LinksPostRequest;
 use Log;
 
 class MediosController extends Controller
@@ -115,17 +116,25 @@ class MediosController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param  \Illuminate\Http\Request
      * @param  \App\Models\Medio  $medio
      * @return \Illuminate\Http\Response
      */
-    public function edit(Medio $medio)
+    public function edit(Request $request, Medio $medio)
     {
+        $searchLink = $request->input('searchLink', '');
+
         return Inertia::render('Medios/Edit', [
             'medio' => [
                 'id' => $medio->id,
                 'nombre' => $medio->nombre,
-                'bio' => $medio->bio
-            ]
+                'bio' => $medio->bio,
+                'links' => $medio->links
+            ],
+            'tiposLinks' => Inertia::lazy(function() {
+                return TiposLink::getDescriptions();
+            }),
+            'links' => Link::getLinks($searchLink)
         ]);
     }
 
@@ -159,5 +168,55 @@ class MediosController extends Controller
         $page = $this->getPage($medio->id);
         $medio->delete();
         return $this->redirectWithPage($page);
+    }
+
+    /**
+     * Create a link to the specified resource
+     *
+     * @param  \App\Http\Requests\LinksPostRequest  $linkPostRequest
+     * @param \App\Models\Medio   $medio
+     * @return \Illuminate\Http\Response
+     */
+    public function createLink(LinksPostRequest $linkPostRequest, Medio $medio)
+    {
+        $data = $linkPostRequest->validated();
+        DB::transaction(function() use ($medio, $data) {
+            $medio->links()->create($data);
+        });
+        return redirect()->back();
+    }
+
+    /**
+     * Remove a link to the specified resource
+     *
+     * @param \App\Models\Medio $medio
+     * @param int $idLink
+     * @return \Illuminate\Http\Response
+     */
+    public function removeLink(Medio $medio, int $idLink)
+    {
+        $medio->links()->detach($idLink);
+
+        return redirect()->back();
+    }
+
+    /**
+     * Attach a link to the specified resource
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @param \App\Models\Medio $medio
+     * @return \Illuminate\Http\Response
+     */
+    public function attachLink(Request $request, Medio $medio)
+    {
+        $req = $request->validate([
+            'id' => ['required', 'integer', 'gt:0'],
+        ]);
+
+        $idLink = $req['id'];
+
+        $medio->links()->attach($idLink);
+
+        return redirect()->back();
     }
 }
