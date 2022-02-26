@@ -20,4 +20,8 @@ class Medio extends Model
         'nombre',
         'bio'
     ];
+
+    public function links() {
+        return $this->belongsToMany(Link::class, 'medios_links', 'medio_id', 'link_id');
+    }
 }

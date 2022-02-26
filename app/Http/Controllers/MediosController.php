@@ -6,6 +6,9 @@ use App\Http\Controllers\Traits\PaginateTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Medio;
+use App\Models\TiposLink;
+use App\Models\Link;
+use Illuminate\Support\Facades\DB;
 use Log;
 
 class MediosController extends Controller
@@ -51,12 +54,19 @@ class MediosController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return Inertia::render('Medios/Create');
+        $searchLink = $request->input('searchLink', '');
+
+        return Inertia::render('Medios/Create', [
+            'tiposLinks' => Inertia::lazy(function() {
+                return TiposLink::getDescriptions();
+            }),
+            'links' => Link::getLinks($searchLink)
+        ]);
     }
 
     /**
@@ -70,15 +80,21 @@ class MediosController extends Controller
         $req = $request->validate([
             'nombre' => ['required', 'max:255'],
             'bio' => ['max:255'],
+            'links' => ['array'],
         ]);
 
         $medio = Medio::onlyTrashed()->where('nombre', '=' ,$req['nombre'])->first();
 
-        if ($medio != null) {
-            $medio->restore();
-        } else {
-            $medio = Medio::create($req);
-        }
+        DB::transaction(function() use ($req, &$medio) {
+            if ($medio != null) {
+                $medio->restore();
+            } else {
+                $medio = Medio::create($req);
+            }
+
+            $medio->links()->attach($req['links']['selLinks']);
+            $medio->links()->createMany($req['links']['createLinks']);
+        });
 
         return $this->redirectSearchPage($medio->id);
     }
