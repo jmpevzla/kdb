@@ -1,7 +1,7 @@
 <template>
   <multiselect v-model="model" track-by="id" placeholder="Buscar ..."
       :options="options" :close-on-select="true" :multiple="false"
-      label="descripcion" :internal-search="true"
+      :label="label" :internal-search="true"
       :show-no-results="false" :clear-on-select="false"
       :max-height="150" openDirection="bottom">
   </multiselect>
@@ -19,12 +19,16 @@ const props = defineProps({
     required: true
   },
   options: {
-    tyle: Array,
+    type: Array,
     required: true
+  },
+  label: {
+    type: String,
+    default: 'descripcion'
   }
 })
 
-const { modelFn, options } = toRefs(props)
+const { modelFn, options, label } = toRefs(props)
 
 const model = modelFn.value()
 

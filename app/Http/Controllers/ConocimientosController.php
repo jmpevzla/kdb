@@ -160,4 +160,27 @@ class ConocimientosController extends Controller
         $conocimiento->delete();
         return $this->redirectWithPage($page);
     }
+
+    /**
+     * Store a newly Tipo resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function createTipo(Request $request)
+    {
+        $req = $request->validate([
+            'nombre' => ['required', 'max:255'],
+        ]);
+
+        $tipo = Tipo::onlyTrashed()->where('nombre', '=' ,$req['nombre'])->first();
+
+        if ($tipo != null) {
+            $tipo->restore();
+        } else {
+            $tipo = Tipo::create($req);
+        }
+
+        return redirect()->back();
+    }
 }

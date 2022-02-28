@@ -34,27 +34,21 @@
                                 />
                             </div>
                             <div class="mb-2">
-                                <label for="tipoSelect">Tipo</label>
-                                <select
-                                  id="tipoSelect"
-                                  required
-                                  class="
-                                    w-full
-                                    px-4
-                                    py-2
-                                    mt-2
-                                    border
-                                    rounded-md
-                                    focus:outline-none
-                                    focus:ring-1
-                                    focus:ring-blue-600
-                                  "
-                                  v-model="form.tipo_id">
+                              <div class="flex flex-row mb-2">
+                                <label class="mr-2">Tipo</label>
+                                <Button type="button" class="rounded-full px-1 py-1"
+                                  @click="showModalTipo">
+                                  <i class="fas fa-plus"></i>
+                                </Button>
+                              </div>
 
-                                  <option v-for="tipo of tipos"
-                                    :key="tipo.id"
-                                    :value="tipo.id">{{ tipo.nombre }}</option>
-                                </select>
+                              <div class="mb-2">
+                                <SimpleSelect
+                                  :modelFn="getSelTipo"
+                                  :options="tipos"
+                                  label="nombre"
+                                />
+                              </div>
                             </div>
                             <div class="mb-2">
                                 <label for="fecInfInput">Fecha de Información</label>
@@ -114,19 +108,36 @@
                 </div>
             </div>
         </div>
+        <ModalCreate
+          v-if="isShowModalTipo"
+          modal-title="Crear un Tipo"
+          id-input="nombre"
+          placeholder-input="Insertar un tipo..."
+          @confirm-event="confirmCreateTipo"
+          @close-event="cancelCreateTipo"
+        />
     </BreezeAuthenticatedLayout>
 </template>
 
 <script setup>
-import { toRefs } from "vue";
+import { toRefs, ref } from "vue";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import { useForm } from "@inertiajs/inertia-vue3";
+import Button from "@/Components/Button.vue"
+import SimpleSelect from "@/Components/SimpleSelect.vue"
+import ModalCreate from "@/Components/ModalCreate.vue"
+import { createComps } from "@/Composables/generic";
+import { watchNewEntSelRef } from "@/Utils/watch"
 
 const props = defineProps({
   tipos: Array
 })
 const { tipos } = toRefs(props)
+
+const selTipo = ref()
+const getSelTipo = () => selTipo
+watchNewEntSelRef(tipos, selTipo)
 
 const form = useForm({
   descripcion: null,
@@ -136,7 +147,17 @@ const form = useForm({
 });
 
 const submit = () => {
+  form.tipo_id = selTipo.value.id
   form.post(route("conocimientos.store"));
 }
+
+const {
+  isShowModal: isShowModalTipo,
+  showModal: showModalTipo,
+  cancelAction: cancelCreateTipo,
+  createAction: confirmCreateTipo
+} = createComps({
+  routeStr: 'conocimientos.createTipo'
+})
 
 </script>

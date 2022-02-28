@@ -70,6 +70,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('links.createTipoLink');
 
     Route::resource('conocimientos', ConocimientosController::class);
+    Route::post('conocimientos/create-tipo', [ConocimientosController::class, 'createTipo'])
+        ->name('conocimientos.createTipo');
 
 });
 
