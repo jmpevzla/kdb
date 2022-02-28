@@ -34,7 +34,7 @@ export function destroyComps (routeStr) {
 
 export function createComps ({
   routeStr = '',
-  idRel = 0,
+  idRel,
   beforeShowModal
 }) {
   const isShowModal = ref(false)

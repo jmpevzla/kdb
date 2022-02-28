@@ -64,7 +64,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('categorias', CategoriasController::class);
     Route::resource('tipos', TiposController::class);
     Route::resource('tipos-links', TiposLinksController::class);
+
     Route::resource('links', LinksController::class);
+    Route::post('links/create-link', [LinksController::class, 'createTipoLink'])
+        ->name('links.createTipoLink');
+
     Route::resource('conocimientos', ConocimientosController::class);
 
 });

@@ -73,7 +73,7 @@ class LinksController extends Controller
      */
     public function create()
     {
-        $tiposLinks = TiposLink::all(['id', 'descripcion']);
+        $tiposLinks = TiposLink::orderBy('descripcion')->get(['id', 'descripcion']);
 
         return Inertia::render('Links/Create', [
             'tiposLinks' => $tiposLinks
@@ -156,5 +156,28 @@ class LinksController extends Controller
         $page = $this->getPage($link->id);
         $link->delete();
         return $this->redirectWithPage($page);
+    }
+
+    /**
+     * Store a new Tipo Link resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function createTipoLink(Request $request)
+    {
+        $req = $request->validate([
+            'descripcion' => ['required', 'max:255'],
+        ]);
+
+        $tiposLink = TiposLink::onlyTrashed()->where('descripcion', '=' ,$req['descripcion'])->first();
+
+        if ($tiposLink != null) {
+            $tiposLink->restore();
+        } else {
+            $tiposLink = TiposLink::create($req);
+        }
+
+        return redirect()->back();
     }
 }

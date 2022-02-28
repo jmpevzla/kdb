@@ -34,28 +34,22 @@
                                 />
                             </div>
                             <div class="mb-2">
-                                <label for="tipoLinkSelect">Tipo de Link</label>
-                                <select
-                                  id="tipoLinkSelect"
-                                  required
-                                  class="
-                                    w-full
-                                    px-4
-                                    py-2
-                                    mt-2
-                                    border
-                                    rounded-md
-                                    focus:outline-none
-                                    focus:ring-1
-                                    focus:ring-blue-600
-                                  "
-                                  v-model="form['tipo-link_id']">
+                              <div class="flex flex-row mb-2">
+                                <label class="mr-2">Tipo de Link</label>
+                                <Button type="button" class="rounded-full px-1 py-1"
+                                  @click="showModalTLink">
+                                  <i class="fas fa-plus"></i>
+                                </Button>
+                              </div>
 
-                                  <option v-for="tipo of tiposLinks"
-                                    :key="tipo.id"
-                                    :value="tipo.id">{{ tipo.descripcion }}</option>
-                                </select>
+                              <div class="mb-2">
+                                <SimpleSelect
+                                  :modelFn="getSelTLink"
+                                  :options="tiposLinks"
+                                />
+                              </div>
                             </div>
+
                             <div>
                                 <label for="linkInput">Link</label>
                                 <input
@@ -95,14 +89,28 @@
                 </div>
             </div>
         </div>
+        <ModalCreate
+          v-if="isShowModalTLink"
+          modal-title="Crear un Tipo de Link"
+          id-input="descripcion"
+          placeholder-input="Insertar un tipo de link..."
+          @confirm-event="confirmCreateTLink"
+          @close-event="cancelCreateTLink"
+        />
     </BreezeAuthenticatedLayout>
 </template>
 
 <script setup>
-import { toRefs } from "vue";
+import { toRefs, ref } from "vue";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import { useForm } from "@inertiajs/inertia-vue3";
+import Button from "@/Components/Button.vue"
+import SimpleSelect from "@/Components/SimpleSelect.vue"
+import ModalCreate from "@/Components/ModalCreate.vue"
+import { createComps } from "@/Composables/generic"
+import { idSelRef } from "@/Utils/index"
+import { watchNewEntSelRef } from "@/Utils/watch"
 
 const props = defineProps({
   link: Object,
@@ -110,14 +118,29 @@ const props = defineProps({
 })
 const { link, tiposLinks } = toRefs(props)
 
+const selTLink = ref()
+const getSelTLink = () => selTLink
+idSelRef(tiposLinks, link.value['tipo-link_id'], selTLink)
+watchNewEntSelRef(tiposLinks, selTLink)
+
 const form = useForm({
   descripcion: link.value.descripcion,
   link: link.value.link,
-  'tipo-link_id': link.value['tipo-link_id']
+  'tipo-link_id': null
 });
 
 const submit = () => {
+  form['tipo-link_id'] = selTLink.value.id
   form.put(route("links.update", link.value.id));
 }
+
+const {
+  isShowModal: isShowModalTLink,
+  showModal: showModalTLink,
+  cancelAction: cancelCreateTLink,
+  createAction: confirmCreateTLink
+} = createComps({
+  routeStr: 'links.createTipoLink'
+})
 
 </script>

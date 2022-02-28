@@ -16,3 +16,8 @@ export function formatDate(str) {
 
   return `${day}-${month}-${year}`
 }
+
+export function idSelRef(watchRef, id, selRef) {
+  const res = watchRef.value.find(v => v.id === id)
+  selRef.value = res
+}

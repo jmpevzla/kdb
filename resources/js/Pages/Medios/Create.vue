@@ -134,8 +134,7 @@ import { useForm } from "@inertiajs/inertia-vue3";
 import LinkMultiSelect from "@/Components/LinkMultiSelect.vue"
 import Button from "@/Components/Button.vue"
 import ModalCreateLink from '@/Components/Modals/CreateLink.vue'
-import { createMemoryComps, destroyMemoryComps,
-  memory2ListsComps } from "@/Composables/generic";
+import { createMemoryComps, memory2ListsComps } from "@/Composables/generic";
 import { beforeModalCreateLink, removeLinkDuplicate } from '@/Composables/utils/links'
 import { onSearchLinks } from '@/Utils/links'
 
