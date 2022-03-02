@@ -29,7 +29,7 @@ const props = defineProps({
     required: true
   },
   options: {
-    tyle: Array,
+    type: Array,
     required: true
   }
 })

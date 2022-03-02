@@ -19,4 +19,20 @@ class Etiqueta extends Model
     protected $fillable = [
         'nombre'
     ];
+
+    /**
+     * Get Etiquetas for search select
+     *
+     * @param string $search
+     * @param int $limit
+     * @return \Illuminate\Support\Collection
+     */
+    public static function getEtiquetas(string $search, int $limit = 30)
+    {
+        return self::select(['id', 'nombre'])
+            ->where('nombre', 'LIKE', '%' . $search . '%')
+            ->orderBy('nombre')
+            ->take($limit)
+            ->get();
+    }
 }

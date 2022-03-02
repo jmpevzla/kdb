@@ -20,4 +20,21 @@ class Categoria extends Model
         'nombre',
         'descripcion'
     ];
+
+    /**
+     * Get Categorias for search select
+     *
+     * @param string $search
+     * @param int $limit
+     * @return \Illuminate\Support\Collection
+     */
+    public static function getCategorias(string $search, int $limit = 30)
+    {
+        return self::select(['id', 'nombre', 'descripcion'])
+            ->where('nombre', 'LIKE', '%' . $search . '%')
+            ->orWhere('descripcion', 'LIKE', '%' . $search . '%')
+            ->orderBy('nombre')
+            ->take($limit)
+            ->get();
+    }
 }

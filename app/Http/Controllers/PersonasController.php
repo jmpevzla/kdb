@@ -57,19 +57,19 @@ class PersonasController extends Controller
         ]);
     }
 
-     /**
-     * Get input request service
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param string $key
-     * @param $default
-     * @return mixed
-     */
-    private function getInput(Request $request, string $key, $default = null)
-    {
-        $data = $request->input($key, $default);
-        return $data == null ? $default : $data;
-    }
+    //  /**
+    //  * Get input request service
+    //  *
+    //  * @param  \Illuminate\Http\Request  $request
+    //  * @param string $key
+    //  * @param $default
+    //  * @return mixed
+    //  */
+    // private function getInput(Request $request, string $key, $default = null)
+    // {
+    //     $data = $request->input($key, $default);
+    //     return $data == null ? $default : $data;
+    // }
 
     /**
      * Show the form for creating a new resource.

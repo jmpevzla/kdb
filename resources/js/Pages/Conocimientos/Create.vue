@@ -51,6 +51,40 @@
                               </div>
                             </div>
                             <div class="mb-2">
+                              <div class="flex flex-row mb-2">
+                                <label class="mr-2">Categorias</label>
+                                <Button type="button" class="rounded-full px-1 py-1"
+                                  @click="">
+                                  <i class="fas fa-plus"></i>
+                                </Button>
+                              </div>
+
+                              <div class="mb-2">
+                                <TagMultiSelect
+                                  :modelFn="getSelCats"
+                                  :options="categorias"
+                                  @search="(query, loading) => onSearchSelect('searchCats', 'categorias')(query, loading)"
+                                />
+                              </div>
+                            </div>
+                            <div class="mb-2">
+                              <div class="flex flex-row mb-2">
+                                <label class="mr-2">Etiquetas</label>
+                                <Button type="button" class="rounded-full px-1 py-1"
+                                  @click="">
+                                  <i class="fas fa-plus"></i>
+                                </Button>
+                              </div>
+
+                              <div class="mb-2">
+                                <TagMultiSelect
+                                  :modelFn="getSelEtqs"
+                                  :options="etiquetas"
+                                  @search="(query, loading) => onSearchSelect('searchEtqs', 'etiquetas')(query, loading)"
+                                />
+                              </div>
+                            </div>
+                            <div class="mb-2">
                                 <label for="fecInfInput">Fecha de Información</label>
                                 <input
                                     id="fecInfInput"
@@ -121,6 +155,7 @@
 
 <script setup>
 import { toRefs, ref } from "vue";
+import { Inertia } from '@inertiajs/inertia'
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import { useForm } from "@inertiajs/inertia-vue3";
@@ -129,25 +164,44 @@ import SimpleSelect from "@/Components/SimpleSelect.vue"
 import ModalCreate from "@/Components/ModalCreate.vue"
 import { createComps } from "@/Composables/generic";
 import { watchNewEntSelRef } from "@/Utils/watch"
+import TagMultiSelect from "@/Components/TagMultiSelect.vue";
 
 const props = defineProps({
-  tipos: Array
+  tipos: Array,
+  categorias: {
+    type: Array,
+    default: []
+  },
+  etiquetas: {
+    type: Array,
+    default: []
+  }
 })
-const { tipos } = toRefs(props)
+const { tipos, categorias, etiquetas } = toRefs(props)
 
 const selTipo = ref()
 const getSelTipo = () => selTipo
 watchNewEntSelRef(tipos, selTipo)
 
+const selCats = ref([])
+const getSelCats = () => selCats
+
+const selEtqs = ref([])
+const getSelEtqs = () => selEtqs
+
 const form = useForm({
   descripcion: null,
   contenido: null,
   tipo_id: null,
+  categorias: null,
+  etiquetas: null,
   fecha_informacion: null
 });
 
 const submit = () => {
   form.tipo_id = selTipo.value.id
+  form.categorias = selCats.value.map(value => value.id)
+  form.etiquetas = selEtqs.value.map(value => value.id)
   form.post(route("conocimientos.store"));
 }
 
@@ -159,5 +213,21 @@ const {
 } = createComps({
   routeStr: 'conocimientos.createTipo'
 })
+
+const onSearchSelect = (nameSearch, field) => (query, isLoading) => {
+  Inertia.reload({
+    data: {
+      [nameSearch]: query
+    },
+    only: [field],
+    onBefore: () => {
+      isLoading.value = true
+    },
+    onFinish: () => {
+      isLoading.value = false
+    }
+  })
+}
+
 
 </script>

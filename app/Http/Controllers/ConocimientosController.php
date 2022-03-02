@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\PaginateTrait;
+use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Conocimiento;
+use App\Models\Etiqueta;
 use App\Models\Tipo;
+use Illuminate\Support\Facades\DB;
 use Log;
+use stdClass;
 
 class ConocimientosController extends Controller
 {
@@ -32,6 +36,8 @@ class ConocimientosController extends Controller
             'descripcion' => ['required', 'max:255'],
             'tipo_id' => ['required', 'integer', 'gt:0'],
             'contenido' => ['required'],
+            'categorias' => ['array'],
+            'etiquetas' => ['array'],
             'fecha_informacion' => ['nullable', 'date']
         ]);
 
@@ -71,14 +77,19 @@ class ConocimientosController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $searchCats = $this->getInput($request, 'searchCats', '');
+        $searchEtqs = $this->getInput($request, 'searchEtqs', '');
         $tipos = Tipo::all(['id', 'nombre']);
 
         return Inertia::render('Conocimientos/Create', [
-            'tipos' => $tipos
+            'tipos' => $tipos,
+            'categorias' => Categoria::getCategorias($searchCats),
+            'etiquetas' => Etiqueta::getEtiquetas($searchEtqs)
         ]);
     }
 
@@ -92,7 +103,12 @@ class ConocimientosController extends Controller
     {
         $req = $this->validateStore($request);
 
-        $conocimiento = Conocimiento::create($req);
+        $conocimiento = new stdClass();
+        DB::transaction(function() use ($req, &$conocimiento) {
+            $conocimiento = Conocimiento::create($req);
+            $conocimiento->categorias()->attach($req['categorias']);
+            $conocimiento->etiquetas()->attach($req['etiquetas']);
+        });
 
         return $this->redirectSearchPage($conocimiento->id);
     }

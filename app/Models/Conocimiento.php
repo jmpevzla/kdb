@@ -27,9 +27,22 @@ class Conocimiento extends Model
 
     /**
      * Relationship One-One Tipos-Links
-     * @return App\Models\Tipo
      */
     public function tipo() {
         return $this->hasOne(Tipo::class, 'id', 'tipo_id');
+    }
+
+    /**
+     * Relationship ManyToMany Categorias
+     */
+    public function categorias() {
+        return $this->belongsToMany(Categoria::class, 'categorias_conocimientos', 'conocimiento_id', 'categoria_id');
+    }
+
+    /**
+     * Relationship ManyToMany Etiquetas
+     */
+    public function etiquetas() {
+        return $this->belongsToMany(Etiqueta::class, 'etiquetas_conocimientos', 'conocimiento_id', 'etiqueta_id');
     }
 }
