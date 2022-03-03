@@ -54,7 +54,7 @@ export function createComps ({
 
     Inertia.post(route(routeStr, idRel), data, {
       preserveScroll: true,
-      preserveState: true
+      preserveState: true,
     })
 
     isShowModal.value = false

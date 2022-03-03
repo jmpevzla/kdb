@@ -54,7 +54,7 @@
                               <div class="flex flex-row mb-2">
                                 <label class="mr-2">Categorias</label>
                                 <Button type="button" class="rounded-full px-1 py-1"
-                                  @click="">
+                                  @click="showModalCat">
                                   <i class="fas fa-plus"></i>
                                 </Button>
                               </div>
@@ -71,7 +71,7 @@
                               <div class="flex flex-row mb-2">
                                 <label class="mr-2">Etiquetas</label>
                                 <Button type="button" class="rounded-full px-1 py-1"
-                                  @click="">
+                                  @click="showModalEtq">
                                   <i class="fas fa-plus"></i>
                                 </Button>
                               </div>
@@ -150,12 +150,27 @@
           @confirm-event="confirmCreateTipo"
           @close-event="cancelCreateTipo"
         />
+        <ModalCreate
+          v-if="isShowModalCat"
+          modal-title="Crear una Categoria"
+          id-input="nombre"
+          placeholder-input="Insertar una categoria..."
+          @confirm-event="confirmCreateCat"
+          @close-event="cancelCreateCat"
+        />
+        <ModalCreate
+          v-if="isShowModalEtq"
+          modal-title="Crear una Etiqueta"
+          id-input="nombre"
+          placeholder-input="Insertar una etiqueta..."
+          @confirm-event="confirmCreateEtq"
+          @close-event="cancelCreateEtq"
+        />
     </BreezeAuthenticatedLayout>
 </template>
 
 <script setup>
-import { toRefs, ref } from "vue";
-import { Inertia } from '@inertiajs/inertia'
+import { toRefs, ref, watch } from "vue";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import { useForm } from "@inertiajs/inertia-vue3";
@@ -165,6 +180,7 @@ import ModalCreate from "@/Components/ModalCreate.vue"
 import { createComps } from "@/Composables/generic";
 import { watchNewEntSelRef } from "@/Utils/watch"
 import TagMultiSelect from "@/Components/TagMultiSelect.vue";
+import { onSearchSelect } from "@/Utils"
 
 const props = defineProps({
   tipos: Array,
@@ -175,9 +191,12 @@ const props = defineProps({
   etiquetas: {
     type: Array,
     default: []
-  }
+  },
+  createCategoria: Object,
+  createEtiqueta: Object
 })
-const { tipos, categorias, etiquetas } = toRefs(props)
+const { tipos, categorias, etiquetas,
+  createCategoria , createEtiqueta } = toRefs(props)
 
 const selTipo = ref()
 const getSelTipo = () => selTipo
@@ -188,6 +207,14 @@ const getSelCats = () => selCats
 
 const selEtqs = ref([])
 const getSelEtqs = () => selEtqs
+
+watch(createCategoria, (value) => {
+  if (value) selCats.value.push(value)
+})
+
+watch(createEtiqueta, (value) => {
+  if (value) selEtqs.value.push(value)
+})
 
 const form = useForm({
   descripcion: null,
@@ -214,20 +241,22 @@ const {
   routeStr: 'conocimientos.createTipo'
 })
 
-const onSearchSelect = (nameSearch, field) => (query, isLoading) => {
-  Inertia.reload({
-    data: {
-      [nameSearch]: query
-    },
-    only: [field],
-    onBefore: () => {
-      isLoading.value = true
-    },
-    onFinish: () => {
-      isLoading.value = false
-    }
-  })
-}
+const {
+  isShowModal: isShowModalCat,
+  showModal: showModalCat,
+  cancelAction: cancelCreateCat,
+  createAction: confirmCreateCat
+} = createComps({
+  routeStr: 'conocimientos.createCategoria'
+})
 
+const {
+  isShowModal: isShowModalEtq,
+  showModal: showModalEtq,
+  cancelAction: cancelCreateEtq,
+  createAction: confirmCreateEtq
+} = createComps({
+  routeStr: 'conocimientos.createEtiqueta'
+})
 
 </script>

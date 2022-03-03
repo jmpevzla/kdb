@@ -72,6 +72,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('conocimientos', ConocimientosController::class);
     Route::post('conocimientos/create-tipo', [ConocimientosController::class, 'createTipo'])
         ->name('conocimientos.createTipo');
+    Route::post('conocimientos/create-categoria', [ConocimientosController::class, 'createCategoria'])
+        ->name('conocimientos.createCategoria');
+    Route::post('conocimientos/create-etiqueta', [ConocimientosController::class, 'createEtiqueta'])
+        ->name('conocimientos.createEtiqueta');
 
 });
 

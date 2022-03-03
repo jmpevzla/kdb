@@ -82,6 +82,10 @@ class ConocimientosController extends Controller
      */
     public function create(Request $request)
     {
+        $session = $request->session();
+        $cat = $session->pull('create-categoria')[0];
+        $etq = $session->pull('create-etiqueta')[0];
+
         $searchCats = $this->getInput($request, 'searchCats', '');
         $searchEtqs = $this->getInput($request, 'searchEtqs', '');
         $tipos = Tipo::all(['id', 'nombre']);
@@ -89,7 +93,9 @@ class ConocimientosController extends Controller
         return Inertia::render('Conocimientos/Create', [
             'tipos' => $tipos,
             'categorias' => Categoria::getCategorias($searchCats),
-            'etiquetas' => Etiqueta::getEtiquetas($searchEtqs)
+            'etiquetas' => Etiqueta::getEtiquetas($searchEtqs),
+            'createCategoria' => $cat,
+            'createEtiqueta' => $etq
         ]);
     }
 
@@ -129,12 +135,22 @@ class ConocimientosController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Conocimiento  $conocimiento
      * @return \Illuminate\Http\Response
      */
-    public function edit(Conocimiento $conocimiento)
+    public function edit(Request $request, Conocimiento $conocimiento)
     {
+        $searchCats = $this->getInput($request, 'searchCats', '');
+        $searchEtqs = $this->getInput($request, 'searchEtqs', '');
+
+        $session = $request->session();
+        $cat = $session->pull('create-categoria')[0];
+        $etq = $session->pull('create-etiqueta')[0];
+
         $tipos = Tipo::all(['id', 'nombre']);
+
+        $conocimiento->load(['categorias:id,nombre', 'etiquetas:id,nombre']);
 
         return Inertia::render('Conocimientos/Edit', [
             'conocimiento' => [
@@ -142,9 +158,15 @@ class ConocimientosController extends Controller
                 'descripcion' => $conocimiento->descripcion,
                 'tipo_id' => $conocimiento->tipo_id,
                 'contenido' => $conocimiento->contenido,
-                'fecha_informacion' => $conocimiento->fecha_informacion
+                'fecha_informacion' => $conocimiento->fecha_informacion,
+                'categorias' => $conocimiento->categorias,
+                'etiquetas' => $conocimiento->etiquetas
             ],
-            'tipos' => $tipos
+            'tipos' => $tipos,
+            'categorias' => Categoria::getCategorias($searchCats),
+            'etiquetas' => Etiqueta::getEtiquetas($searchEtqs),
+            'createCategoria' => $cat,
+            'createEtiqueta' => $etq
         ]);
     }
 
@@ -159,7 +181,11 @@ class ConocimientosController extends Controller
     {
         $data = $this->validateStore($request);
 
-        $conocimiento->update($data);
+        DB::transaction(function() use ($data, &$conocimiento) {
+            $conocimiento->update($data);
+            $conocimiento->categorias()->sync($data['categorias']);
+            $conocimiento->etiquetas()->sync($data['etiquetas']);
+        });
 
         return $this->redirectSearchPage($conocimiento->id);
     }
@@ -197,6 +223,56 @@ class ConocimientosController extends Controller
             $tipo = Tipo::create($req);
         }
 
+        return redirect()->back();
+    }
+
+    /**
+     * Store a new Categoria resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function createCategoria(Request $request)
+    {
+        $req = $request->validate([
+            'nombre' => ['required', 'max:255'],
+        ]);
+
+        $cat = Categoria::onlyTrashed()->where('nombre', '=' ,$req['nombre'])->first();
+
+        if ($cat != null) {
+            $cat->restore();
+        } else {
+            $cat = Categoria::create($req);
+        }
+
+        $session = $request->session();
+        $session->push('create-categoria', $cat);
+        return redirect()->back();
+    }
+
+    /**
+     * Store a new Etiqueta resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function createEtiqueta(Request $request)
+    {
+        $req = $request->validate([
+            'nombre' => ['required', 'max:255'],
+        ]);
+
+        $etq = Etiqueta::onlyTrashed()->where('nombre', '=' ,$req['nombre'])->first();
+
+        if ($etq != null) {
+            $etq->restore();
+        } else {
+            $etq = Etiqueta::create($req);
+        }
+
+        $session = $request->session();
+        $session->push('create-etiqueta', $etq);
         return redirect()->back();
     }
 }

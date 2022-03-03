@@ -49,6 +49,40 @@
                               </div>
                             </div>
                             <div class="mb-2">
+                              <div class="flex flex-row mb-2">
+                                <label class="mr-2">Categorias</label>
+                                <Button type="button" class="rounded-full px-1 py-1"
+                                  @click="showModalCat">
+                                  <i class="fas fa-plus"></i>
+                                </Button>
+                              </div>
+
+                              <div class="mb-2">
+                                <TagMultiSelect
+                                  :modelFn="getSelCats"
+                                  :options="categorias"
+                                  @search="(query, loading) => onSearchSelect('searchCats', 'categorias')(query, loading)"
+                                />
+                              </div>
+                            </div>
+                            <div class="mb-2">
+                              <div class="flex flex-row mb-2">
+                                <label class="mr-2">Etiquetas</label>
+                                <Button type="button" class="rounded-full px-1 py-1"
+                                  @click="showModalEtq">
+                                  <i class="fas fa-plus"></i>
+                                </Button>
+                              </div>
+
+                              <div class="mb-2">
+                                <TagMultiSelect
+                                  :modelFn="getSelEtqs"
+                                  :options="etiquetas"
+                                  @search="(query, loading) => onSearchSelect('searchEtqs', 'etiquetas')(query, loading)"
+                                />
+                              </div>
+                            </div>
+                            <div class="mb-2">
                                 <label for="title">Fecha de Información</label>
                                 <input
                                     type="date"
@@ -110,11 +144,27 @@
           @confirm-event="confirmCreateTipo"
           @close-event="cancelCreateTipo"
         />
+        <ModalCreate
+          v-if="isShowModalCat"
+          modal-title="Crear una Categoria"
+          id-input="nombre"
+          placeholder-input="Insertar una categoria..."
+          @confirm-event="confirmCreateCat"
+          @close-event="cancelCreateCat"
+        />
+        <ModalCreate
+          v-if="isShowModalEtq"
+          modal-title="Crear una Etiqueta"
+          id-input="nombre"
+          placeholder-input="Insertar una etiqueta..."
+          @confirm-event="confirmCreateEtq"
+          @close-event="cancelCreateEtq"
+        />
     </BreezeAuthenticatedLayout>
 </template>
 
 <script setup>
-import { toRefs, ref } from "vue";
+import { toRefs, ref, watch } from "vue";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import { useForm } from "@inertiajs/inertia-vue3";
@@ -123,28 +173,55 @@ import SimpleSelect from "@/Components/SimpleSelect.vue"
 import ModalCreate from "@/Components/ModalCreate.vue"
 import { createComps } from "@/Composables/generic";
 import { watchNewEntSelRef } from "@/Utils/watch"
-import { idSelRef } from "@/Utils/index"
+import { idSelRef, onSearchSelect, selTagsRef } from "@/Utils/index"
+import TagMultiSelect from "@/Components/TagMultiSelect.vue";
 
 const props = defineProps({
   conocimiento: Object,
-  tipos: Array
+  tipos: Array,
+  categorias: Array,
+  etiquetas: Array,
+  createCategoria: Object,
+  createEtiqueta: Object
 })
-const { conocimiento, tipos } = toRefs(props)
+const { conocimiento, tipos, categorias, etiquetas
+ , createCategoria , createEtiqueta } = toRefs(props)
 
 const selTipos = ref()
 const getSelTipo = () => selTipos
 idSelRef(tipos, conocimiento.value.tipo_id, selTipos)
 watchNewEntSelRef(tipos, selTipos)
 
+const selCats = ref([])
+const getSelCats = () => selCats
+selTagsRef(conocimiento, 'categorias', selCats)
+
+const selEtqs = ref([])
+const getSelEtqs = () => selEtqs
+selTagsRef(conocimiento, 'etiquetas', selEtqs)
+
+watch(createCategoria, (value) => {
+  if (value) selCats.value.push(value)
+})
+
+watch(createEtiqueta, (value) => {
+  if (value) selEtqs.value.push(value)
+})
+
 const form = useForm({
   descripcion: conocimiento.value.descripcion,
   tipo_id: conocimiento.value.tipo_id,
   contenido: conocimiento.value.contenido,
+  categorias: [],
+  etiquetas: [],
   fecha_informacion: conocimiento.value.fecha_informacion
 });
 
 const submit = () => {
   form.tipo_id = selTipos.value.id
+  form.categorias = selCats.value.map(value => value.id)
+  form.etiquetas = selEtqs.value.map(value => value.id)
+
   form.put(route("conocimientos.update", conocimiento.value.id));
 }
 
@@ -155,6 +232,24 @@ const {
   createAction: confirmCreateTipo
 } = createComps({
   routeStr: 'conocimientos.createTipo'
+})
+
+const {
+  isShowModal: isShowModalCat,
+  showModal: showModalCat,
+  cancelAction: cancelCreateCat,
+  createAction: confirmCreateCat
+} = createComps({
+  routeStr: 'conocimientos.createCategoria'
+})
+
+const {
+  isShowModal: isShowModalEtq,
+  showModal: showModalEtq,
+  cancelAction: cancelCreateEtq,
+  createAction: confirmCreateEtq
+} = createComps({
+  routeStr: 'conocimientos.createEtiqueta'
 })
 
 </script>

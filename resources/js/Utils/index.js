@@ -21,3 +21,26 @@ export function idSelRef(watchRef, id, selRef) {
   const res = watchRef.value.find(v => v.id === id)
   selRef.value = res
 }
+
+export function selTagsRef(watchRef, field, selRef) {
+  const wRef = watchRef.value[field]
+  selRef.value = []
+  wRef.forEach((value) => {
+   selRef.value.push(value)
+  })
+}
+
+export const onSearchSelect = (nameSearch, field) => (query, isLoading) => {
+  Inertia.reload({
+    data: {
+      [nameSearch]: query
+    },
+    only: [field],
+    onBefore: () => {
+      isLoading.value = true
+    },
+    onFinish: () => {
+      isLoading.value = false
+    }
+  })
+}
